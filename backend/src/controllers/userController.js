@@ -4,29 +4,23 @@ const userController = {
     //get all users
     getAllUsers : async(req, res) =>{
         try{
-                const user = await User.find();
-                res.status(200).json(user);
+            const user = await User.find();
+            res.status(200).json(user);
         } catch(err){
-            res.status(500).json(err);
+           return res.status(500).json(err);
         };
     },
-    //get user by id
-    // getUser : async(req,res)=>{
-    //     try{
-    //         const user = await User.findById(req.params.id);
-    //         res.status(200).json(user);
-    //     } catch(err){
-    //         res.status(500).json(err)
-    //     };
-    // }
     //delete user
     deleteUser: async(req,res)=>{
-        try{
-            const user = await User.findById(req.params.id);
-            res.status(200).json("Xoa nguoi dung thanh cong!");
-        } catch(err){
-            res.status(500).json(err)
-        };
+        try {
+            const user = await User.findByIdAndDelete(req.params.id);
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+            res.status(200).json({ message: "User deleted successfully" });
+        } catch (err) {
+            res.status(500).json(err);
+        }
     },
 }
 

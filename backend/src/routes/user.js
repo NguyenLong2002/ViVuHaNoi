@@ -8,6 +8,6 @@ router.get('/', middlewareController.verifyToken, userController.getAllUsers),
 //get user by id
 
 //delete user
-router.delete("/:id", middlewareController.verifyTokenAndAdminAuth,userController.deleteUser),
+router.delete("/:id", middlewareController.verifyTokenAndUserAuthorization,userController.deleteUser),
 
 module.exports = router;

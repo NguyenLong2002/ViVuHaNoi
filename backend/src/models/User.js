@@ -22,6 +22,9 @@ const userSchema = new mongoose.Schema(
             type: Boolean,
             default:false,
         },
+        photo: {
+            type: String,
+        },
         emailVerified: { 
             type: Boolean,
              default: false ,

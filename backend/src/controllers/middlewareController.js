@@ -3,33 +3,42 @@ const jwt = require("jsonwebtoken");
 const middlewareController = {
     // Middleware để xác minh token
     verifyToken: (req, res, next) => {
-        const token = req.headers.token;
+        //ACCESS TOKEN FROM HEADER, REFRESH TOKEN FROM COOKIE
+        const token = req.headers.authorization?.split(' ')[1];
+        console.log(token);
+
         if (token) {
-            const accessToken = token.split(" ")[1];
-            jwt.verify(accessToken, "longdeptrai", (err, user) => {
+            jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
                 if (err) {
-                    // Trả về lỗi 401 nếu token không hợp lệ
-                    return res.status(401).json({ error: "Unauthorized", message: "Token is not valid" });
+                    return res.status(403).json("Token is not valid!");
                 }
-                // Gán thông tin người dùng đã được xác thực vào req.user
                 req.user = user;
                 next();
             });
         } else {
-            // Trả về lỗi 401 nếu không có token được cung cấp
-            res.status(401).json({ error: "Unauthorized", message: "You're not authenticated" });
+            res.status(401).json("You're not authenticated");
         }
-    },
+      },
 
-    verifyTokenAndAdminAuth: (req, res, next) =>{
-        middlewareController.verifyToken(req, res, () =>{
-            if(req.user.id == req.params.id || req.user.admin){
-                next();
-            }else{
-                res.status(403).json("You're not allowed to delete other");
-            }
+      verifyTokenAndUserAuthorization: (req, res, next) => {
+        middlewareController.verifyToken(req, res, () => {
+          if (req.user.id === req.params.id|| req.user.admin) {
+            next();
+          } else {
+            res.status(403).json("You're not allowed to do that!");
+          }
         });
-    }
+      },
+      
+       verifyTokenAndAdmin: (req, res, next) => {
+        middlewareController.verifyToken(req, res, () => {
+          if (req.user.admin) {
+            next();
+          } else {
+            res.status(403).json("You're not allowed to do that!");
+          }
+        })
+    },
 };
 
 module.exports = middlewareController;
