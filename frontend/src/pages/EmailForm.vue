@@ -49,7 +49,7 @@ export default {
 
         const requestReset = async () => {
             try {
-                const response = await axios.post('http://localhost:8000/v1/auth/request-reset', { email: email.value });
+                const response = await axios.post('http://localhost:8000/api/auth/request-reset', { email: email.value });
                 message.value = response.data.message;
                 
                 alert('Thành công! Hãy kiểm tra email của bạn.');

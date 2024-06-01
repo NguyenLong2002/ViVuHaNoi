@@ -173,7 +173,7 @@
                     <p class="">
                         Bạn sẽ ngạc nhiên việc ngắm thủ đô Việt Nam nhiều đến nhường này chỉ trong một ngày - tất cả những gì bạn cần là một lịch trình thật đúng đắn. Trong tour thành phố 7 giờ này, bạn sẽ khám phá được nét đặc trưng của Hà Nội thông qua các cảnh quan thiên nhiên, bảo tàng, nơi thờ cúng và hơn thế nữa. Ngay sau khi được đón đi một cách thuận tiện từ khách sạn, bạn sẽ đến Khu Phức Hợp Hồ Chí Minh - khu vực không có xe cộ qua lại của những tượng đài, nơi tưởng niệm và vườn thực vật, cùng với những giải thích đầy ắp thông tin từ hướng dẫn viên. Tham quan Chùa Một Cột và Chùa Trấn Quốc trước khi dừng chân ở Văn Miếu Quốc Tử Giám, trường đại học quốc gia đầu tiên của Việt Nam. Sau bữa ăn trưa thư giãn, bạn vẫn còn thời gian để đi đến Hồ Hoàn Kiếm, làng gốm Bát Tràng và nhiều nơi khác. Vào cuối tour, bạn có thể chọn xem biểu diễn múa rối nước, hay đi xích lô truyền thống để tham quan hoặc tránh tình trạng giao thông có thể xảy ra khi đưa bạn trở về khách sạn.
                     </p>
-                    <img src="../../../assets/images/carousel1.jpg" alt="Chiêm ngưỡng hồ gươm mơ mộng" class="rounded-xl mt-2">
+                    <img src="../assets/images/carousel1.jpg" alt="Chiêm ngưỡng hồ gươm mơ mộng" class="rounded-xl mt-2">
                 </div>
             </div>
         </div>

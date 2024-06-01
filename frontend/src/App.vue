@@ -1,8 +1,8 @@
 
 
 <script>
-import NavbarApp from './components/layouts/NavbarApp.vue';
-import FooterApp from './components/layouts/FooterApp.vue'
+import HeaderApp from './pages/components/HeaderApp.vue';
+import FooterApp from './pages/components/FooterApp.vue'
 import 'flowbite';
 
 import { onMounted } from 'vue'
@@ -22,14 +22,14 @@ export default {
     
   },
   components: {
-    NavbarApp,
+    HeaderApp,
     FooterApp
   }
 }
 </script>
 
 <template>
-  <NavbarApp />
+  <HeaderApp />
   <router-view/>
   <FooterApp />
 </template>

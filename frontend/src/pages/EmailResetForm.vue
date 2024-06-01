@@ -40,7 +40,7 @@ export default {
       }
       try {
         const token = route.params.token;
-        const response = await axios.post(`http://localhost:8000/v1/auth/reset-password/${token}`, { password: password.value });
+        const response = await axios.post(`http://localhost:8000/api/auth/reset-password/${token}`, { password: password.value });
         message.value = response.data.message;
         alert('Đổi mật khẩu thành công!');
         if (response.status === 200) {

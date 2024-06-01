@@ -1,6 +1,6 @@
   
 <script setup>
-  import TourSearch from '../layouts/TourSearch.vue';
+  import TourSearch from './components/TourSearch.vue';
 </script>
 <template>
   <div class="mt-16 relative">
@@ -9,19 +9,19 @@
     <div class="relative h-56 overflow-hidden rounded-lg md:h-[450px]">
          <!-- Item 1 -->
         <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="../../assets/images/carousel1.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
+            <img src="../assets/images/carousel1.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
         </div>
         <!-- Item 2 -->
         <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="../../assets/images/carousel2.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
+            <img src="../assets/images/carousel2.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
         </div>
         <!-- Item 3 -->
         <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="../../assets/images/carousel3.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
+            <img src="../assets/images/carousel3.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
         </div>
         <!-- Item 4 -->
         <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="../../assets/images/carousel4.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
+            <img src="../assets/images/carousel4.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
         </div>
         
     </div>
@@ -79,7 +79,7 @@
       <router-link to="/tours/tour-detail">
         <div class="max-w-sm bg-white border border-gray-200 rounded-2xl shadow-3xl hover:shadow-full transition-shadow overflow-hidden">
             <a href="#">
-                <img class="" src="../../assets/images/toursImg/MotNgayOHaNoi.webp" alt="" />
+                <img class="" src="../assets/images/toursImg/MotNgayOHaNoi.webp" alt="" />
             </a>
             <div class="p-5 flex flex-col min-h-48">
                 <a href="#" class="grow">
@@ -98,7 +98,7 @@
       <div>
         <div class="flex-1 max-w-sm bg-white border border-gray-200 rounded-2xl shadow-3xl hover:shadow-full transition-shadow overflow-hidden">
             <a href="">
-                <img class="" src="../../assets/images/toursImg/AmThucPhoCoImg.webp" alt="" />
+                <img class="" src="../assets/images/toursImg/AmThucPhoCoImg.webp" alt="" />
             </a>
             <div class="p-5 flex flex-col min-h-48">
                 <a href="#" class="grow">
@@ -117,7 +117,7 @@
       <div>
         <div class="max-w-sm bg-white border border-gray-200 rounded-2xl shadow-3xl hover:shadow-full transition-shadow overflow-hidden">
             <a href="#">
-                <img class="" src="../../assets/images/toursImg/ThamQuanHNBangXeMay.webp" alt="" />
+                <img class="" src="../assets/images/toursImg/ThamQuanHNBangXeMay.webp" alt="" />
             </a>
             <div class="p-5 flex flex-col min-h-48">
                 <a href="#" class="grow">
@@ -136,7 +136,7 @@
       <div>
         <div class="max-w-sm bg-white border border-gray-200 rounded-2xl shadow-3xl hover:shadow-full transition-shadow overflow-hidden">
             <a href="#">
-                <img class="" src="../../assets/images/toursImg/DiBoAmThucVaXemMuaRoiNuoc.webp" alt="" />
+                <img class="" src="../assets/images/toursImg/DiBoAmThucVaXemMuaRoiNuoc.webp" alt="" />
             </a>
             <div class="p-5 flex flex-col min-h-48">
                 <a href="#" class="grow" >

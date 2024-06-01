@@ -16,7 +16,7 @@ const state = {
 const mutations = {
   loginStart(state) {
     state.login.isFetching = true;
-    state.login.error = false; // Reset error state
+    state.login.error = false;
   },
   loginSuccess(state, user) {
     state.login.isFetching = false;
@@ -27,7 +27,6 @@ const mutations = {
     state.login.isFetching = false;
     state.login.error = true;
   },
-  //register
   registerStart(state) {
     state.register.isFetching = true;
     state.register.error = false;
@@ -42,13 +41,25 @@ const mutations = {
     state.register.isFetching = false;
     state.register.error = true;
   },
+  logoutStart(state) {
+    state.login.isFetching = true;
+  },
+  logoutSuccess(state) {
+    state.login.isFetching = false;
+    state.login.currentUser = null;
+    state.login.error = false;
+  },
+  logoutFailed(state) {
+    state.login.isFetching = false;
+    state.login.error = true;
+  },
 };
 
 const actions = {
   async login({ commit }, user) {
     commit('loginStart');
     try {
-      const response = await axios.post('http://localhost:8000/v1/auth/login', user);
+      const response = await axios.post('http://localhost:8000/api/auth/login', user);
       if (response.data.success) {
         const userData = response.data.user;
         commit('loginSuccess', userData);
@@ -70,18 +81,38 @@ const actions = {
   async register({ commit }, newUser) {
     commit('registerStart');
     try {
-      await axios.post('http://localhost:8000/v1/auth/register', newUser);
+      await axios.post('http://localhost:8000/api/auth/register', newUser);
       commit('registerSuccess');
       return true;
     } catch (error) {
       commit('registerFailed');
-      throw error; // Re-throw error to be caught in the component
+      throw error;
+    }
+  },
+
+  async logout({ commit }, { id, accessToken, axiosJWT }) {
+    commit('logoutStart');
+    try {
+      const response = await axiosJWT.post('http://localhost:8000/api/auth/logout', { id }, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        withCredentials: true,
+      });
+      if (response.data.success) {
+        commit('logoutSuccess');
+        axiosJWT.defaults.headers.common['Authorization'] = null; // Clear the token
+      } else {
+        commit('logoutFailed');
+      }
+    } catch (error) {
+      commit('logoutFailed');
     }
   },
 };
 
 export default {
-  namespaced: true, // Ensure the module is namespaced
+  namespaced: true,
   state,
   mutations,
   actions,

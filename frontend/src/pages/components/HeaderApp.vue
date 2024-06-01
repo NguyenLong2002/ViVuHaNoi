@@ -32,7 +32,7 @@
                   <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Cài đặt</a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" @click="logout">Đăng xuất</a>
+                  <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" @click="handleLogout">Đăng xuất</a>
                 </li>
               </ul>
             </div>
@@ -66,10 +66,12 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import LoginModal from '../auth/login/LoginUser.vue';
-import RegisterModal from '../auth/register/RegisterUser.vue';
-import EmailModal from '../auth/password/EmailForm.vue'
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+import LoginModal from '../LoginPage.vue';
+import RegisterModal from '../RegisterPage.vue';
+import EmailModal from '../EmailForm.vue';
+import { createAxios } from '../../createInstance';
 
 export default {
   components: {
@@ -78,13 +80,21 @@ export default {
     EmailModal,
   },
   setup() {
+
+    const store = useStore();
     const isLoginModalOpen = ref(false);
     const isRegisterModalOpen = ref(false);
     const isEmailModalOpen = ref(false);
-    const userName = ref('');
-    const userEmail = ref('');
-    const isLoggedIn = ref(false);
     const isDropdownOpen = ref(false);
+
+    const isLoggedIn = computed(() => !!store.state.auth.login.currentUser);
+    const userName = computed(() => store.state.auth.login.currentUser?.username || '');
+    const userEmail = computed(() => store.state.auth.login.currentUser?.email || '');
+
+    const user = computed(() => store.state.auth.login.currentUser);
+    const id = computed(() => user.value?._id);
+    const accessToken = computed(() => user.value?.accessToken);
+    let axiosJWT = createAxios(store.commit, user.value, 'auth/logoutSuccess');
 
     const openLoginModal = () => {
       isLoginModalOpen.value = true;
@@ -120,15 +130,20 @@ export default {
         console.error('Invalid user object:', user);
       }
     };
+
     const toggleDropdown = () => {
       isDropdownOpen.value = !isDropdownOpen.value;
     };
 
-    const logout = () => {
-      isLoggedIn.value = false;
-      userName.value = '';
-      userEmail.value = '';
-      isDropdownOpen.value = false;
+    const handleLogout = async () => {
+      try {
+    // const axiosJWT = createAxios(store.commit, user.value, 'auth/logoutSuccess');
+    await store.dispatch('auth/logout', { id: id.value, accessToken: accessToken.value, axiosJWT });
+    axiosJWT.defaults.headers.common['Authorization'] = null; // Clear the token
+    isDropdownOpen.value = false;
+  } catch (error) {
+    console.error('Logout failed:', error);
+  }
     };
 
     return {
@@ -147,7 +162,7 @@ export default {
       isLoggedIn,
       isDropdownOpen,
       toggleDropdown,
-      logout,
+      handleLogout,
     };
   },
 };
@@ -155,4 +170,4 @@ export default {
 
 <style scoped>
 /* Style code here */
-</style>
+</style>../auth/login/LoginPage.vue../auth/register/RegisterPage.vue../../pages/EmailForm.vue

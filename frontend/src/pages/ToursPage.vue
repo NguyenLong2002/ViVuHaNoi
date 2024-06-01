@@ -1,5 +1,5 @@
 <script setup>
-import TourSearch from '../../layouts/TourSearch.vue';
+import TourSearch from './components/TourSearch.vue';
 
 </script>
 <template>
@@ -64,7 +64,7 @@ import TourSearch from '../../layouts/TourSearch.vue';
                 <div class="w-3/4">
                     <div class="">
                         <router-link to="/tours/tour-detail" class="flex flex-col items-center bg-white border border-gray-200 rounded-3xl shadow md:flex-row  hover:bg-gray-100 hover:shadow-3xl p-6 mb-8">
-                            <img class="object-cover rounded-lg md:h-60 md:w-80 md:rounded-3xl" src="../../../assets/images/toursImg/MotNgayOHaNoi.webp" alt="">
+                            <img class="object-cover rounded-lg md:h-60 md:w-80 md:rounded-3xl" src="../assets/images/toursImg/MotNgayOHaNoi.webp" alt="">
                             <div class="flex flex-col px-8 pt-8 w-full justify-between md:h-60">
                                 <div class="">
                                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Tour Một Ngày Ở Hà Nội</h5>
@@ -79,7 +79,7 @@ import TourSearch from '../../layouts/TourSearch.vue';
                             </div>
                         </router-link>
                         <a href="#" class="flex flex-col items-center bg-white border border-gray-200 rounded-3xl shadow md:flex-row  hover:bg-gray-100 hover:shadow-3xl p-6 mb-8">
-                            <img class="object-cover rounded-lg md:h-60 md:w-80 md:rounded-3xl" src="../../../assets/images/toursImg/ThamQuanHNBangXeMay.webp" alt="">
+                            <img class="object-cover rounded-lg md:h-60 md:w-80 md:rounded-3xl" src="../assets/images/toursImg/ThamQuanHNBangXeMay.webp" alt="">
                             <div class="flex flex-col px-8 pt-8 w-full justify-between md:h-60">
                                 <div class="">
                                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Tour Tham Quan Hà Nội Bằng Xe Máy</h5>
@@ -93,7 +93,7 @@ import TourSearch from '../../layouts/TourSearch.vue';
                             </div>
                         </a>
                         <a href="#" class="flex flex-col items-center bg-white border border-gray-200 rounded-3xl shadow md:flex-row  hover:bg-gray-100 hover:shadow-3xl p-6 mb-8">
-                            <img class="object-cover rounded-lg md:h-60 md:w-80 md:rounded-3xl" src="../../../assets/images/toursImg/AmThucPhoCoImg.webp" alt="">
+                            <img class="object-cover rounded-lg md:h-60 md:w-80 md:rounded-3xl" src="../assets/images/toursImg/AmThucPhoCoImg.webp" alt="">
                             <div class="flex flex-col px-8 pt-8 w-full justify-between md:h-60">
                                 <div class="">
                                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Tour Ẩm Thực Phố Cổ Hà Nội</h5>

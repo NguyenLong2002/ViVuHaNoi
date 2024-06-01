@@ -1,18 +1,13 @@
-import HomePage from './components/views/HomePage.vue';
-import ToursPage from './components/views/tours/ToursPage.vue';
-import TourDetail from './components/views/tours/TourDetail.vue';
-import BlogPage from './components/views/blog/BlogPage.vue';
-import ContactPage from './components/views/contact/ContactPage.vue'
-import EmailResetForm from './components/auth/password/EmailResetForm.vue'
+import HomePage from './pages/HomePage.vue';
+import ToursPage from './pages/ToursPage.vue';
+import TourDetail from './pages/TourDetail.vue';
+import BlogPage from './pages/BlogPage.vue';
+import ContactPage from './pages/ContactPage.vue'
+import EmailResetForm from './pages/EmailResetForm.vue'
 
 export const routes = [
     {path:'/', component:HomePage},
-    {
-        path:'/tours', 
-        component:ToursPage,
-       
-    },
-    
+    {path:'/tours',component:ToursPage},
     {path:'/tours/tour-detail', component:TourDetail},
     {path:'/blogs', component:BlogPage},
     {path:'/contact', component:ContactPage},
