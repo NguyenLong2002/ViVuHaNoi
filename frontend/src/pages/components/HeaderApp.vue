@@ -137,10 +137,11 @@ export default {
 
     const handleLogout = async () => {
       try {
-    // const axiosJWT = createAxios(store.commit, user.value, 'auth/logoutSuccess');
-    await store.dispatch('auth/logout', { id: id.value, accessToken: accessToken.value, axiosJWT });
-    axiosJWT.defaults.headers.common['Authorization'] = null; // Clear the token
-    isDropdownOpen.value = false;
+        await store.dispatch('auth/logout', { id: id.value, accessToken: accessToken.value, axiosJWT });
+        axiosJWT.defaults.headers.common['Authorization'] = null; // Clear the token
+        localStorage.removeItem('vuex'); // Remove Vuex state from localStorage
+        isDropdownOpen.value = false;
+        window.location.reload();
   } catch (error) {
     console.error('Logout failed:', error);
   }
@@ -170,4 +171,4 @@ export default {
 
 <style scoped>
 /* Style code here */
-</style>../auth/login/LoginPage.vue../auth/register/RegisterPage.vue../../pages/EmailForm.vue
+</style>

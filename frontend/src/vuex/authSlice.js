@@ -101,7 +101,6 @@ const actions = {
       });
       if (response.data.success) {
         commit('logoutSuccess');
-        axiosJWT.defaults.headers.common['Authorization'] = null; // Clear the token
       } else {
         commit('logoutFailed');
       }
