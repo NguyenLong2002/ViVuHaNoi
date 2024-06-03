@@ -1,13 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const tourController = require("../controllers/tourController");
+const middlewareController = require("../controllers/middlewareController");
 
 // Create new tour
-router.post("/", tourController.createTour);
+router.post("/",middlewareController.verifyAdmin, tourController.createTour);
 // update new tour
-router.put("/:id", tourController.updateTour);
+router.put("/:id",middlewareController.verifyAdmin, tourController.updateTour);
 // delete new tour
-router.delete("/:id", tourController.deleteTour);
+router.delete("/:id",middlewareController.verifyAdmin, tourController.deleteTour);
+
 // get single tour
 router.get("/:id", tourController.getSingleTour);
 // get all tour

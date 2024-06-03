@@ -38,7 +38,7 @@ const tourController = {
     getSingleTour:async(req, res)=>{
         const id = req.params.id;
         try{
-            const tour = await Tour.findById(id);
+            const tour = await Tour.findById(id).populate("reviews");
             res.status(200).json({success:true,message:"Successful ",data:tour});
         }catch(err){
             res.status(404).json({success:false,message:"Not found",})
@@ -50,7 +50,7 @@ const tourController = {
         //for pagination
         const page = parseInt(req.query.page);
         try{
-            const tours = await Tour.find({}).skip(page * 8).limit(8);
+            const tours = await Tour.find({}).populate("reviews").skip(page * 8).limit(8);
             res.status(200).json({success:true,message:"Successful ",count:tours.length, data:tours});
         }catch(err){
             res.status(404).json({success:false,message:"Not found",})
@@ -71,7 +71,7 @@ const tourController = {
                 address,
                 maxGroupSize:{$gte:maxGroupSize},
                 price:{$gte:price}
-            })
+            }).populate("reviews")
             res.status(200).json({
                 success:true,
                 message:"Successful ",
@@ -83,7 +83,7 @@ const tourController = {
     //get featured tours
     getFeaturedTours:async(req, res)=>{
         try{
-            const tours = await Tour.find({featured:true}).limit(8);
+            const tours = await Tour.find({featured:true}).populate("reviews").limit(8);
             res.status(200).json({success:true,message:"Successful ",count:tours.length, data:tours});
         }catch(err){
             res.status(404).json({success:false,message:"Not found",})

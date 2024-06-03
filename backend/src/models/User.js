@@ -18,10 +18,10 @@ const userSchema = new mongoose.Schema(
             required:true,
             minlength:6,
         },
-        admin:{
-            type: Boolean,
-            default:false,
-        },
+        role: {
+            type: String,
+            default: "user",
+          },
         photo: {
             type: String,
         },

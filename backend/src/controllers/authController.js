@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const { sendMail } = require("../utils/sendEmail");
 require('dotenv').config(); // Load biến môi trường từ tệp .env
 
-let refreshTokens = [];
+// let refreshTokens = [];
 const authController = {
     // REGISTER
     registerUser: async (req, res) => {
@@ -27,6 +27,7 @@ const authController = {
                 email: req.body.email,
                 username: req.body.username,
                 password: hashPass,
+                photo:req.body.photo,
                 emailVerified: false
             });
 
@@ -86,24 +87,24 @@ const authController = {
         return jwt.sign(
             {
                 id: user.id,
-                admin: user.admin,
+                role: user.role,
             },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: "20s" }
+            { expiresIn: "10d" }
         );
     },
 
     // GENERATE REFRESH TOKEN
-    generateRefreshToken: (user) => {
-        return jwt.sign(
-            {
-                id: user.id,
-                admin: user.admin,
-            },
-            process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: "365d" }
-        );
-    },
+    // generateRefreshToken: (user) => {
+    //     return jwt.sign(
+    //         {
+    //             id: user.id,
+    //             role: user.role,
+    //         },
+    //         process.env.REFRESH_TOKEN_SECRET,
+    //         { expiresIn: "365d" }
+    //     );
+    // },
 
     // LOGIN
     loginUser: async (req, res) => {
@@ -119,65 +120,66 @@ const authController = {
             if (!user.emailVerified) {
                 return res.status(403).json({ success: false, message: 'Email has not been verified!' });
             }
-            const accessToken = authController.generateAccessToken(user);
-            const refreshToken = authController.generateRefreshToken(user);
-            refreshTokens.push(refreshToken);
-            res.cookie("refreshToken", refreshToken, {
+            const token = authController.generateAccessToken(user);
+            // const refreshToken = authController.generateRefreshToken(user);
+            // refreshTokens.push(refreshToken);
+            res.cookie("accessToken", token, {
                 httpOnly: true,
                 secure: false,
                 path: "/",
                 sameSite: "strict",
+                expires:token.expiresIn,
             });
-            const { password, ...others } = user._doc;
-            res.status(200).json({ success: true, user: { ...others, accessToken} });
+            const { password, role, ...others } = user._doc;
+            res.status(200).json({ success: true, user: { ...others, token,role} });
         } catch (err) {
             res.status(500).json({ success: false, message: 'Internal server error' });
         }
     },
 
-    requestRefreshToken: async (req, res) => {
-       //Take refresh token from user
-    const refreshToken = req.cookies.refreshToken;
-    //Send error if token is not valid
-    if (!refreshToken) return res.status(401).json("You're not authenticated");
-    if (!refreshTokens.includes(refreshToken)) {
-      return res.status(403).json("Refresh token is not valid");
-    }
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-      if (err) {
-        console.log(err);
-      }
-      refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
-      //create new access token, refresh token and send to user
-      const newAccessToken = authController.generateAccessToken(user);
-      const newRefreshToken = authController.generateRefreshToken(user);
-      refreshTokens.push(newRefreshToken);
-      res.cookie("refreshToken", newRefreshToken, {
-        httpOnly: true,
-        secure:false,
-        path: "/",
-        sameSite: "strict",
-      });
-      res.status(200).json({
-        accessToken: newAccessToken,
-        refreshToken: newRefreshToken,
-      });
-    });
-    },
+    // requestRefreshToken: async (req, res) => {
+    //    //Take refresh token from user
+    // const refreshToken = req.cookies.refreshToken;
+    // //Send error if token is not valid
+    // if (!refreshToken) return res.status(401).json("You're not authenticated");
+    // if (!refreshTokens.includes(refreshToken)) {
+    //   return res.status(403).json("Refresh token is not valid");
+    // }
+    // jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+    //   if (err) {
+    //     console.log(err);
+    //   }
+    //   refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+    //   //create new access token, refresh token and send to user
+    //   const newAccessToken = authController.generateAccessToken(user);
+    //   const newRefreshToken = authController.generateRefreshToken(user);
+    //   refreshTokens.push(newRefreshToken);
+    //   res.cookie("refreshToken", newRefreshToken, {
+    //     httpOnly: true,
+    //     secure:false,
+    //     path: "/",
+    //     sameSite: "strict",
+    //   });
+    //   res.status(200).json({
+    //     accessToken: newAccessToken,
+    //     refreshToken: newRefreshToken,
+    //   });
+    // });
+    // },
 
     // LOG OUT
     logoutUser: async (req, res) => {
-        const refreshToken = req.cookies.refreshToken;
+        const accessToken = req.cookies.accessToken;
 
-    if (!refreshToken) {
+    if (!accessToken) {
         return res.status(401).json("You're not authenticated");
     }
 
     // Remove refresh token from the list
-    refreshTokens = refreshTokens.filter(token => token !== refreshToken);
+    // refreshTokens = refreshTokens.filter(token => token !== refreshToken);
 
     // Clear the refresh token cookie
-    res.clearCookie("refreshToken", {
+    res.clearCookie("accessToken", {
         httpOnly: true,
         secure: false, // Set to true if using HTTPS
         path: "/",

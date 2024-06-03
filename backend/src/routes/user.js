@@ -2,12 +2,14 @@ const router = require("express").Router();
 const userController = require("../controllers/userController");
 const middlewareController = require("../controllers/middlewareController");
 
-//get all user
-router.get('/', middlewareController.verifyToken, userController.getAllUsers),
-// router.get('/', userController.getAllUsers),
-//get user by id
 
+//update user
+router.put("/:id",middlewareController.verifyUser,userController.updateUser)
 //delete user
-router.delete("/:id", middlewareController.verifyTokenAndUserAuthorization,userController.deleteUser),
+router.delete("/:id", middlewareController.verifyUser,userController.deleteUser),
+//get all user
+router.get('/', middlewareController.verifyAdmin, userController.getAllUsers),
+//get single user
+router.get("/:id",middlewareController.verifyUser, userController.getSingleUser),
 
 module.exports = router;
