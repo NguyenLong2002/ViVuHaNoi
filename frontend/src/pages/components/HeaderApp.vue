@@ -1,8 +1,8 @@
 <template>
-  <nav class="bg-white dark:bg-gray-900 fixed w-full z-40 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+  <nav class="bg-white dark:bg-gray-900 fixed w-full z-40 top-0 start-0 border-b border-gray-200 shadow-lg">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-1">
       <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-        <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">VivuHaNoi</span>
+        <img src="../../assets/logo.png" alt="" class="w-36">
       </a>
       <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
         <div v-if="!isLoggedIn">
@@ -32,7 +32,7 @@
                   <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Cài đặt</a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" >Đăng xuất</a>
+                  <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" @click = "handleLogout" >Đăng xuất</a>
                 </li>
               </ul>
             </div>
@@ -71,7 +71,6 @@ import { useStore } from 'vuex';
 import LoginModal from '../LoginPage.vue';
 import RegisterModal from '../RegisterPage.vue';
 import EmailModal from '../EmailForm.vue';
-//import { createAxios } from '../../createInstance';
 
 export default {
   components: {
@@ -90,11 +89,6 @@ export default {
     const isLoggedIn = computed(() => !!store.state.auth.login.currentUser);
     const userName = computed(() => store.state.auth.login.currentUser?.username || '');
     const userEmail = computed(() => store.state.auth.login.currentUser?.email || '');
-
-    //const user = computed(() => store.state.auth.login.currentUser);
-    // const id = computed(() => user.value?._id);
-    // const accessToken = computed(() => user.value?.accessToken);
-    // let axiosJWT = createAxios(store.commit, user.value, 'auth/logoutSuccess');
 
     const openLoginModal = () => {
       isLoginModalOpen.value = true;
@@ -135,17 +129,14 @@ export default {
       isDropdownOpen.value = !isDropdownOpen.value;
     };
 
-  //   const handleLogout = async () => {
-  //     try {
-  //       await store.dispatch('auth/logout', { id: id.value, accessToken: accessToken.value, axiosJWT });
-  //       axiosJWT.defaults.headers.common['Authorization'] = null; // Clear the token
-  //       localStorage.removeItem('vuex'); // Remove Vuex state from localStorage
-  //       isDropdownOpen.value = false;
-  //       window.location.reload();
-  // } catch (error) {
-  //   console.error('Logout failed:', error);
-  // }
-  //   };
+     const handleLogout = async () => {
+       try {
+          await store.dispatch('auth/logout');
+          openLoginModal();
+        } catch (error) {
+          console.error('Logout failed:', error);
+        }
+     };
 
     return {
       isLoginModalOpen,
@@ -163,7 +154,7 @@ export default {
       isLoggedIn,
       isDropdownOpen,
       toggleDropdown,
-      
+      handleLogout,
     };
   },
 };

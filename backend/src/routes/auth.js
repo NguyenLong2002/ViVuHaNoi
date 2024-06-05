@@ -11,9 +11,6 @@ router.get("/verify-email", authController.verifyEmail);
 // Login user
 router.post("/login", authController.loginUser);
 
-// Refresh token
-//router.post("/refresh", authController.requestRefreshToken);
-
 // Logout user
 router.post("/logout", middlewareController.verifyToken, authController.logoutUser);
 

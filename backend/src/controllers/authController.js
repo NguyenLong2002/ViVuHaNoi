@@ -94,18 +94,6 @@ const authController = {
         );
     },
 
-    // GENERATE REFRESH TOKEN
-    // generateRefreshToken: (user) => {
-    //     return jwt.sign(
-    //         {
-    //             id: user.id,
-    //             role: user.role,
-    //         },
-    //         process.env.REFRESH_TOKEN_SECRET,
-    //         { expiresIn: "365d" }
-    //     );
-    // },
-
     // LOGIN
     loginUser: async (req, res) => {
         try {
@@ -121,72 +109,35 @@ const authController = {
                 return res.status(403).json({ success: false, message: 'Email has not been verified!' });
             }
             const token = authController.generateAccessToken(user);
-            // const refreshToken = authController.generateRefreshToken(user);
-            // refreshTokens.push(refreshToken);
             res.cookie("accessToken", token, {
                 httpOnly: true,
-                secure: false,
+                secure: false, // Set to true if using HTTPS
                 path: "/",
                 sameSite: "strict",
-                expires:token.expiresIn,
             });
             const { password, role, ...others } = user._doc;
-            res.status(200).json({ success: true, user: { ...others, token,role} });
+            res.status(200).json({ success: true, user: { ...others, token, role } });
         } catch (err) {
             res.status(500).json({ success: false, message: 'Internal server error' });
         }
     },
 
-    // requestRefreshToken: async (req, res) => {
-    //    //Take refresh token from user
-    // const refreshToken = req.cookies.refreshToken;
-    // //Send error if token is not valid
-    // if (!refreshToken) return res.status(401).json("You're not authenticated");
-    // if (!refreshTokens.includes(refreshToken)) {
-    //   return res.status(403).json("Refresh token is not valid");
-    // }
-    // jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-    //   if (err) {
-    //     console.log(err);
-    //   }
-    //   refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
-    //   //create new access token, refresh token and send to user
-    //   const newAccessToken = authController.generateAccessToken(user);
-    //   const newRefreshToken = authController.generateRefreshToken(user);
-    //   refreshTokens.push(newRefreshToken);
-    //   res.cookie("refreshToken", newRefreshToken, {
-    //     httpOnly: true,
-    //     secure:false,
-    //     path: "/",
-    //     sameSite: "strict",
-    //   });
-    //   res.status(200).json({
-    //     accessToken: newAccessToken,
-    //     refreshToken: newRefreshToken,
-    //   });
-    // });
-    // },
-
     // LOG OUT
     logoutUser: async (req, res) => {
         const accessToken = req.cookies.accessToken;
-
-    if (!accessToken) {
-        return res.status(401).json("You're not authenticated");
-    }
-
-    // Remove refresh token from the list
-    // refreshTokens = refreshTokens.filter(token => token !== refreshToken);
-
-    // Clear the refresh token cookie
-    res.clearCookie("accessToken", {
-        httpOnly: true,
-        secure: false, // Set to true if using HTTPS
-        path: "/",
-        sameSite: "strict",
-    });
-
-    res.status(200).json("Logged out successfully!");
+        if (!accessToken) {
+            return res.status(401).json("You're not authenticated");
+        }
+    
+        // Clear the access token cookie
+        res.clearCookie("accessToken", {
+            httpOnly: true,
+            secure: false, 
+            path: "/",
+            sameSite: "strict",
+        });
+    
+        res.status(200).json("Logged out successfully!");
     },
 
     //yêu cầu đặt lại mật khẩu

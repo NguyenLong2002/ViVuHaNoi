@@ -4,8 +4,6 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 
-// const authRouter = require('./routes/auth');
-// const userRouter = require('./routes/user');
 const routes = require('./routes/index');
 
 dotenv.config(); // Load biến môi trường từ tệp .env
@@ -16,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({
-   origin: true, // Replace with your frontend's origin
+   origin: 'http://localhost:8080', 
    credentials: true,
  }));
 

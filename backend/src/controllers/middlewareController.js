@@ -5,7 +5,10 @@ const middlewareController = {
     verifyToken: (req, res, next) => {
         //ACCESS TOKEN FROM HEADER, REFRESH TOKEN FROM COOKIE
         const token = req.cookies.accessToken;
-
+        if (!token) {
+          console.log("No token found");
+          return res.status(401).json("You're not authenticated");
+        }
         if (token) {
             jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
                 if (err) {
