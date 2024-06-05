@@ -1,14 +1,94 @@
+<script setup>
+import { onMounted, computed, ref,watchEffect  } from 'vue';
+import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+
+const store = useStore();
+const route = useRoute();
+const id = route.params.id;
+
+const adults = ref(0);
+const children = ref(0);
+const priceForAdults = ref(0);
+const priceForChildren = ref(0);
+
+
+onMounted(async () => {
+    if (id) {
+        try {
+            await store.dispatch('tour/getSingleTour', id);
+        } catch (error) {
+            console.error('Error fetching single tour:', error);
+        }
+    } else {
+        console.error('ID parameter is missing');
+    }
+});
+
+const tour = computed(() => {
+  return store.state.tour.singleTour;
+});
+//Tính trung bình đánh giá
+const getAverageRating = (reviews) => {
+  if (!reviews || !Array.isArray(reviews) || reviews.length === 0) return 0;
+  const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+  return (totalRating / reviews.length).toFixed(1);
+};
+
+watchEffect(() => {
+    if (tour.value) {
+        priceForAdults.value = tour.value.priceForAdults;
+        priceForChildren.value = tour.value.priceForChildren;
+    }
+});
+const incrementAdults = () => {
+    if (adults.value < 20) {
+        adults.value++;
+    }
+};
+const decrementAdults = () => {
+    if (adults.value > 0) {
+        adults.value--;
+    }
+};
+const incrementChildren = () => {
+    if (children.value < 20) {
+        children.value++;
+    }
+};
+const decrementChildren = () => {
+    if (children.value > 0) {
+        children.value--;
+    }
+};
+
+//Tính tổng tiền
+const total = computed(() =>{
+    const totalAmount = adults.value*priceForAdults.value + children.value*priceForChildren.value;
+  return totalAmount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+});
+
+//Cập nhật ngày hiện tại
+const selectedDate = ref(new Date().toISOString().substring(0, 10));
+
+//Xóa tất cả lựa chọn
+const clearAllOption = () =>{
+    adults.value = 0;
+    children.value = 0;
+    selectedDate.value = new Date().toISOString().substring(0, 10);
+}
+</script>
 
 
 <template>
-    <div class="mt-24" id="ToutDetail">
+    <div v-if="tour" class="mt-24" id="ToutDetail">
         <div class="mx-auto w-3/4 flex justify-between px-8">
             <div class="">
-                <h1 class="text-4xl font-bold tracking-tight text-gray-900">Tour Một Ngày Ở Hà Nội</h1>
-                <p class="text-xl mt-2"><font-awesome-icon :icon="['fas', 'star']" class="text-yellow-300"/> <span class="text-yellow-300">5</span> (<span>0</span> đánh giá)</p>
+                <h1 class="text-4xl font-bold tracking-tight text-gray-900">{{ tour.title }}</h1>
+                <p class="text-xl mt-2"><font-awesome-icon :icon="['fas', 'star']" class="text-yellow-300"/> <span class="text-yellow-300">{{ getAverageRating(tour.reviews) }}</span> (<span>{{ tour.reviews.length }}</span> đánh giá)</p>
             </div>
             <div class="">
-                <p class="text-4xl font-bold text-secondary">774,518<span> đ</span> / Khách</p>
+                <p class="text-4xl font-bold text-secondary">{{ tour.priceForAdults }}<span> đ</span> / Khách</p>
             </div>
         </div>
 
@@ -16,22 +96,22 @@
             <div class="grid gap-4 grid-flow-col grid-cols-12">
 
                 <div class="col-span-6">
-                    <img class="h-96 w-full rounded-lg " src="https://flowbite.s3.amazonaws.com/docs/gallery/featured/image.jpg" alt="">
+                    <img class="h-96 w-full rounded-lg " :src="tour.photo" :alt="tour.title">
                 </div>
                 <div class="grid row-span-1 gap-4 col-span-3">
                     <div>
-                        <img class="h-[184px] w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg" alt="">
+                        <img class="h-[184px] w-full rounded-lg" :src="tour.photo" :alt="tour.title">
                     </div>
                     <div>
-                        <img class="h-[184px] w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg" alt="">
+                        <img class="h-[184px] w-full rounded-lg" :src="tour.photo" :alt="tour.title">
                     </div>
                 </div>
                 <div class="grid row-span-1 gap-4 col-span-3">
                     <div>
-                        <img class="h-[184px] w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg" alt="">
+                        <img class="h-[184px] w-full rounded-lg" :src="tour.photo" :alt="tour.title">
                     </div>
                     <div>
-                        <img class="h-[184px] w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg" alt="">
+                        <img class="h-[184px] w-full rounded-lg" :src="tour.photo" :alt="tour.title">
                     </div>
                 </div>
             </div>
@@ -95,7 +175,7 @@
                 <div class="">
                     <div class="flex justify-between items-center">
                         <p class="text-xl font-semibold text-gray-900">Thông tin gói dịch vụ</p>
-                        <p class="cursor-pointer font-semibold text-gray-900 hover:text-secondary">Xóa tất cả</p>
+                        <p @click = "clearAllOption" class="cursor-pointer font-semibold text-gray-900 hover:text-secondary">Xóa tất cả</p>
                     </div>
                     <h3 class="text-gray-600 text-sm mt-4">Xin chọn ngày tham gia</h3>
                     <div class="relative max-w-sm mt-2">
@@ -104,24 +184,24 @@
                             <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                             </svg>
                         </div>
-                        <input type="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block  ps-10 p-2.5 ">
+                        <input v-model="selectedDate"  type="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block  ps-10 p-2.5 ">
                     </div>
 
                     <h3 class="text-gray-600 text-sm mt-4 ">Số lượng</h3>
                     <div class="mt-2 flex justify-between items-center px-4 py-2 bg-white rounded-md">
                         <p class="font-semibold text-gray-900">Người lớn</p>
                         <div class="flex items-center">
-                            <p class="text-gray-900 mr-3 font-semibold">774,518<span>đ</span></p>
+                            <p class="text-gray-900 mr-3 font-semibold">{{ tour.priceForAdults }}<span>đ</span></p>
                             <form class="">
                                     <div class="relative flex items-center max-w-32">
-                                        <button type="button" id="decrement-button" data-input-counter-decrement="people-input" class="bg-gray-100  hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100  focus:ring-2 focus:outline-none">
+                                        <button @click="decrementAdults" type="button" id="decrement-button" data-input-counter-decrement="people-input" class="bg-gray-100  hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100  focus:ring-2 focus:outline-none">
                                             <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
                                             </svg>
                                         </button>
-                                        <input type="text" id="people-input" data-input-counter data-input-counter-min="0" data-input-counter-max="5" aria-describedby="helper-text-explanation" class="bg-gray-50 border-x-0 border-gray-300 h-11 font-medium text-center text-gray-900 text-lg focus:ring-blue-500 focus:border-blue-500 block w-full " placeholder="" value="0" required />
+                                        <input type="text" id="bedrooms-input" class="bg-gray-50 border-x-0 border-gray-300 h-11 font-medium text-center text-gray-900 text-lg focus:ring-blue-500 focus:border-blue-500 block w-full " placeholder="0" value="0" v-model="adults" required />
                                         
-                                        <button type="button" id="increment-button" data-input-counter-increment="people-input" class="bg-gray-100  hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100  focus:ring-2 focus:outline-none">
+                                        <button @click="incrementAdults" type="button" id="increment-button" data-input-counter-increment="people-input" class="bg-gray-100  hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100  focus:ring-2 focus:outline-none">
                                             <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
                                             </svg>
@@ -133,17 +213,18 @@
                     <div class="mt-2 flex justify-between items-center px-4 py-2 bg-white rounded-md ">
                         <p class="font-semibold text-gray-900">Trẻ em(5-8)</p>
                         <div class="flex items-center">
-                            <p class="text-gray-900 mr-3 font-semibold">585,152<span>đ</span></p>
+                            <p class="text-gray-900 mr-3 font-semibold">{{ tour.priceForChildren}}<span>đ</span></p>
                             <form class="">
                                     <div class="relative flex items-center max-w-32">
-                                        <button type="button" id="decrement-button" data-input-counter-decrement="people-input" class="bg-gray-100  hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100  focus:ring-2 focus:outline-none">
+                                        <button @click="decrementChildren" type="button" id="decrement-button" data-input-counter-decrement="people-input" class="bg-gray-100  hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100  focus:ring-2 focus:outline-none">
                                             <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
                                             </svg>
                                         </button>
-                                        <input type="text" id="people-input" data-input-counter data-input-counter-min="0" data-input-counter-max="5" aria-describedby="helper-text-explanation" class="bg-gray-50 border-x-0 border-gray-300 h-11 font-medium text-center text-gray-900 text-lg focus:ring-blue-500 focus:border-blue-500 block w-full " placeholder="" value="0" required />
+
+                                        <input type="text" id="people-input" class="bg-gray-50 border-x-0 border-gray-300 h-11 font-medium text-center text-gray-900 text-lg focus:ring-blue-500 focus:border-blue-500 block w-full " value="0"  v-model = "children" required />
                                         
-                                        <button type="button" id="increment-button" data-input-counter-increment="people-input" class="bg-gray-100  hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100  focus:ring-2 focus:outline-none">
+                                        <button @click="incrementChildren" type="button" id="increment-button" data-input-counter-increment="people-input" class="bg-gray-100  hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100  focus:ring-2 focus:outline-none">
                                             <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
                                             </svg>
@@ -156,7 +237,7 @@
                     <div class="mt-8 px-4 flex justify-between items-center ">
                         <div class="">
                             <p class="text-gray-900 text-sm">Tổng tiền</p>
-                            <p class="text-2xl text-secondary">0 <span> đ</span> </p>
+                            <p class="text-2xl text-secondary">{{ total }}</p>
                         </div>
                     
                             <button class="px-5 py-3 text-sm font-medium text-center text-secondary bg-primary rounded-xl shadow-3xl hover:text-white hover:bg-secondary transition-colors duration-300 ease-in-out">Đặt ngay</button>
@@ -204,9 +285,9 @@
                         <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
                             <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
                         </svg>
-                        <p class="ms-2 text-sm font-bold text-gray-900 dark:text-white">4.95</p>
+                        <p class="ms-2 text-sm font-bold text-gray-900 dark:text-white">{{ getAverageRating(tour.reviews) }}</p>
                         <span class="w-1 h-1 mx-1.5 bg-gray-500 rounded-full dark:bg-gray-400"></span>
-                        <a href="#" class="text-sm font-medium text-gray-900 hover:text-primary dark:text-white">73 reviews</a>
+                        <a href="#" class="text-sm font-medium text-gray-900 hover:text-primary dark:text-white">{{ tour.reviews.length }} reviews</a>
                     </div>
 
                     <div class="">
@@ -246,3 +327,5 @@
         </div>
     </div>
 </template>
+
+

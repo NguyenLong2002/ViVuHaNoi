@@ -50,7 +50,7 @@ const tourController = {
         //for pagination
         const page = parseInt(req.query.page);
         try{
-            const tours = await Tour.find({}).populate("reviews").skip(page * 8).limit(8);
+            const tours = await Tour.find({}).populate("reviews").skip(page * 6).limit(6);
             res.status(200).json({success:true,message:"Successful ",count:tours.length, data:tours});
         }catch(err){
             res.status(404).json({success:false,message:"Not found",})
@@ -83,7 +83,7 @@ const tourController = {
     //get featured tours
     getFeaturedTours:async(req, res)=>{
         try{
-            const tours = await Tour.find({featured:true}).populate("reviews").limit(8);
+            const tours = await Tour.find({featured:true}).populate("reviews").limit(6);
             res.status(200).json({success:true,message:"Successful ",count:tours.length, data:tours});
         }catch(err){
             res.status(404).json({success:false,message:"Not found",})

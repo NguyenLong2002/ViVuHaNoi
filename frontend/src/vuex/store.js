@@ -1,13 +1,15 @@
 import { createStore } from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import authSlice from './authSlice';
+import tourSlice from './tourSlice';
 
 const store = createStore({
   modules: {
-    auth: authSlice
+    auth: authSlice,
+    tour: tourSlice
   },
   plugins: [createPersistedState({
-    paths: ['auth'] // Persist only the login.currentUser state
+    paths: ['auth']
   })]
 });
 

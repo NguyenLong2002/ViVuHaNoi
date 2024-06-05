@@ -90,24 +90,24 @@ const actions = {
     }
   },
 
-  async logout({ commit }, { id, accessToken, axiosJWT }) {
-    commit('logoutStart');
-    try {
-      const response = await axiosJWT.post('http://localhost:8000/api/auth/logout', { id }, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-        withCredentials: true,
-      });
-      if (response.data.success) {
-        commit('logoutSuccess');
-      } else {
-        commit('logoutFailed');
-      }
-    } catch (error) {
-      commit('logoutFailed');
-    }
-  },
+  // async logout({ commit }, { id, accessToken, axiosJWT }) {
+  //   commit('logoutStart');
+  //   try {
+  //     const response = await axiosJWT.post('http://localhost:8000/api/auth/logout', { id }, {
+  //       headers: {
+  //         authorization: `Bearer ${accessToken}`,
+  //       },
+  //       withCredentials: true,
+  //     });
+  //     if (response.data.success) {
+  //       commit('logoutSuccess');
+  //     } else {
+  //       commit('logoutFailed');
+  //     }
+  //   } catch (error) {
+  //     commit('logoutFailed');
+  //   }
+  // },
 };
 
 export default {

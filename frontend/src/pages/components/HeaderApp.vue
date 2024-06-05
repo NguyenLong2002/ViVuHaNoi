@@ -32,7 +32,7 @@
                   <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Cài đặt</a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" @click="handleLogout">Đăng xuất</a>
+                  <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" >Đăng xuất</a>
                 </li>
               </ul>
             </div>
@@ -71,7 +71,7 @@ import { useStore } from 'vuex';
 import LoginModal from '../LoginPage.vue';
 import RegisterModal from '../RegisterPage.vue';
 import EmailModal from '../EmailForm.vue';
-import { createAxios } from '../../createInstance';
+//import { createAxios } from '../../createInstance';
 
 export default {
   components: {
@@ -91,10 +91,10 @@ export default {
     const userName = computed(() => store.state.auth.login.currentUser?.username || '');
     const userEmail = computed(() => store.state.auth.login.currentUser?.email || '');
 
-    const user = computed(() => store.state.auth.login.currentUser);
-    const id = computed(() => user.value?._id);
-    const accessToken = computed(() => user.value?.accessToken);
-    let axiosJWT = createAxios(store.commit, user.value, 'auth/logoutSuccess');
+    //const user = computed(() => store.state.auth.login.currentUser);
+    // const id = computed(() => user.value?._id);
+    // const accessToken = computed(() => user.value?.accessToken);
+    // let axiosJWT = createAxios(store.commit, user.value, 'auth/logoutSuccess');
 
     const openLoginModal = () => {
       isLoginModalOpen.value = true;
@@ -135,17 +135,17 @@ export default {
       isDropdownOpen.value = !isDropdownOpen.value;
     };
 
-    const handleLogout = async () => {
-      try {
-        await store.dispatch('auth/logout', { id: id.value, accessToken: accessToken.value, axiosJWT });
-        axiosJWT.defaults.headers.common['Authorization'] = null; // Clear the token
-        localStorage.removeItem('vuex'); // Remove Vuex state from localStorage
-        isDropdownOpen.value = false;
-        window.location.reload();
-  } catch (error) {
-    console.error('Logout failed:', error);
-  }
-    };
+  //   const handleLogout = async () => {
+  //     try {
+  //       await store.dispatch('auth/logout', { id: id.value, accessToken: accessToken.value, axiosJWT });
+  //       axiosJWT.defaults.headers.common['Authorization'] = null; // Clear the token
+  //       localStorage.removeItem('vuex'); // Remove Vuex state from localStorage
+  //       isDropdownOpen.value = false;
+  //       window.location.reload();
+  // } catch (error) {
+  //   console.error('Logout failed:', error);
+  // }
+  //   };
 
     return {
       isLoginModalOpen,
@@ -163,7 +163,7 @@ export default {
       isLoggedIn,
       isDropdownOpen,
       toggleDropdown,
-      handleLogout,
+      
     };
   },
 };

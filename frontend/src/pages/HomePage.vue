@@ -1,7 +1,9 @@
   
 <script setup>
   import TourSearch from './components/TourSearch.vue';
+  import TourListCard from './components/TourListCard.vue'
 </script>
+
 <template>
   <div class="mt-16 relative">
     <div id="default-carousel" class="relative w-full" data-carousel="slide">
@@ -25,13 +27,7 @@
         </div>
         
     </div>
-    <!-- Slider indicators -->
-    <!-- <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
-        <button type="button" class="w-3 h-3 rounded-full" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"></button>
-        <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 2" data-carousel-slide-to="1"></button>
-        <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 3" data-carousel-slide-to="2"></button>
-        <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 4" data-carousel-slide-to="3"></button>
-    </div> -->
+    
     <!-- Slider controls -->
     <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
         <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
@@ -75,83 +71,8 @@
       <h1 class="font-extrabold text-3xl text-gray-900">Các tour Hà Nội hấp dẫn nhất</h1>
       <p class="text-lg font-medium opacity-90 mt-2">Một cái gì đó ở đây</p>
     </div>
-    <div class="grid grid-cols-3 gap-8 mt-20">
-      <router-link to="/tours/tour-detail">
-        <div class="max-w-sm bg-white border border-gray-200 rounded-2xl shadow-3xl hover:shadow-full transition-shadow overflow-hidden">
-            <a href="#">
-                <img class="" src="../assets/images/toursImg/MotNgayOHaNoi.webp" alt="" />
-            </a>
-            <div class="p-5 flex flex-col min-h-48">
-                <a href="#" class="grow">
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white line-clamp-2">Tour Một Ngày Ở Hà Nội</h5>
-                </a>
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Thời lượng: <span>1 ngày</span></p>
-                <div class="flex justify-between items-center">
-                  <p class="text-lg font-bold text-secondary">774,518<span>đ</span> / Khách</p>
-                  <a href="#" class="inline-flex items-center px-5 py-3 text-sm font-medium text-center text-secondary bg-primary rounded-3xl hover:bg-secondary hover:text-white shadow-3xl focus:ring-4 focus:outline-none focus:ring-blue-300 ">
-                      Đặt ngay
-                  </a>
-                </div>
-            </div>
-        </div>
-      </router-link> 
-      <div>
-        <div class="flex-1 max-w-sm bg-white border border-gray-200 rounded-2xl shadow-3xl hover:shadow-full transition-shadow overflow-hidden">
-            <a href="">
-                <img class="" src="../assets/images/toursImg/AmThucPhoCoImg.webp" alt="" />
-            </a>
-            <div class="p-5 flex flex-col min-h-48">
-                <a href="#" class="grow">
-                    <h5 class="h-auto mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white line-clamp-2">Tour Ẩm Thực Phố Cổ Hà Nội</h5>
-                </a>
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Thời lượng: <span>3 giờ</span></p>
-                <div class="flex justify-between items-center">
-                  <p class="text-lg font-bold text-secondary">459,124<span>đ</span> / Khách</p>
-                  <a href="#" class="inline-flex items-center px-5 py-3 text-sm font-medium text-center text-secondary bg-primary rounded-3xl shadow-3xl  hover:bg-secondary hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 ">
-                      Đặt ngay
-                  </a>
-                </div>
-            </div>
-        </div>
-      </div> 
-      <div>
-        <div class="max-w-sm bg-white border border-gray-200 rounded-2xl shadow-3xl hover:shadow-full transition-shadow overflow-hidden">
-            <a href="#">
-                <img class="" src="../assets/images/toursImg/ThamQuanHNBangXeMay.webp" alt="" />
-            </a>
-            <div class="p-5 flex flex-col min-h-48">
-                <a href="#" class="grow">
-                    <h5 class=" mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white line-clamp-2">Tour Tham Quan Hà Nội Bằng Xe Máy</h5>
-                </a>
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Thời lượng: <span>4 giờ</span></p>
-                <div class="flex justify-between items-center">
-                  <p class="text-lg font-bold text-secondary">1,045,726<span>đ</span> / Khách</p>
-                  <a href="#" class="inline-flex items-center px-5 py-3 text-sm font-medium text-center text-secondary bg-primary rounded-3xl shadow-3xl hover:bg-secondary hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 ">
-                      Đặt ngay
-                  </a>
-                </div>
-            </div>
-        </div>
-      </div> 
-      <div>
-        <div class="max-w-sm bg-white border border-gray-200 rounded-2xl shadow-3xl hover:shadow-full transition-shadow overflow-hidden">
-            <a href="#">
-                <img class="" src="../assets/images/toursImg/DiBoAmThucVaXemMuaRoiNuoc.webp" alt="" />
-            </a>
-            <div class="p-5 flex flex-col min-h-48">
-                <a href="#" class="grow" >
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white line-clamp-2">Tour Đi Bộ Ẩm Thực Đường Phố Hà Nội Và Xem Múa Rối Nước</h5>
-                </a>
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Thời lượng: <span>4 giờ</span></p>
-                <div class="flex justify-between items-center">
-                  <p class="text-lg font-bold text-secondary">584,063<span>đ</span> / Khách</p>
-                  <a href="#" class="inline-flex items-center px-5 py-3 text-sm font-medium text-center text-secondary bg-primary rounded-3xl shadow-3xl hover:bg-secondary hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 ">
-                      Đặt ngay
-                  </a>
-                </div>
-            </div>
-        </div>
-      </div> 
+    <div class="mt-20">
+      <TourListCard />
     </div>
 
     <div class="w-full flex justify-center">

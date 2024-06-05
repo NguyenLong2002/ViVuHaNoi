@@ -1,14 +1,30 @@
 <script setup>
 import TourSearch from './components/TourSearch.vue';
+import { onMounted, computed } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+onMounted(() => {
+  store.dispatch('tour/getTours');
+});
+
+const tours = computed(() => store.state.tour.tours);
+const getAverageRating = (reviews) => {
+  if (!reviews || !Array.isArray(reviews) || reviews.length === 0) return 0;
+  const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+  return (totalRating / reviews.length).toFixed(1);
+};
 
 </script>
+
 <template>
     <div class="bg-bgPattern">
         <div class="pt-52 w-3/4 mx-auto ">
             <TourSearch />
 
             <div class="flex justify-between mt-32">
-                <h2 class="text-4xl text-gray-900 font-extrabold">Tìm thấy 4 kết quả.</h2>
+                <h2 class="text-4xl text-gray-900 font-extrabold">Tìm thấy ... kết quả.</h2>
                 <select id="" class="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-3xl  block w-52 p-3 ">
                     <option >Không sắp xếp</option>
                     <option >Giá thấp đến cao</option>
@@ -63,49 +79,27 @@ import TourSearch from './components/TourSearch.vue';
                 </div>
                 <div class="w-3/4">
                     <div class="">
-                        <router-link to="/tours/tour-detail" class="flex flex-col items-center bg-white border border-gray-200 rounded-3xl shadow md:flex-row  hover:bg-gray-100 hover:shadow-3xl p-6 mb-8">
-                            <img class="object-cover rounded-lg md:h-60 md:w-80 md:rounded-3xl" src="../assets/images/toursImg/MotNgayOHaNoi.webp" alt="">
-                            <div class="flex flex-col px-8 pt-8 w-full justify-between md:h-60">
-                                <div class="">
-                                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Tour Một Ngày Ở Hà Nội</h5>
-                                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Thời lượng: <span>1 ngày</span></p>
-                                    <p class="text-sm"><font-awesome-icon :icon="['fas', 'star']" class="text-yellow-300"/> <span>5</span> (<span>0</span>) đánh giá</p>
-                                    <hr class="my-6 bg-gray-500 w-full" />
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <p class="text-lg font-bold text-secondary">774,518<span>đ</span> / Khách</p>
-                                    <button class="px-5 py-3 text-sm font-medium text-center text-secondary bg-primary rounded-3xl hover:bg-secondary hover:text-white shadow-3xl">Đặt ngay</button>
-                                </div>
-                            </div>
-                        </router-link>
-                        <a href="#" class="flex flex-col items-center bg-white border border-gray-200 rounded-3xl shadow md:flex-row  hover:bg-gray-100 hover:shadow-3xl p-6 mb-8">
-                            <img class="object-cover rounded-lg md:h-60 md:w-80 md:rounded-3xl" src="../assets/images/toursImg/ThamQuanHNBangXeMay.webp" alt="">
-                            <div class="flex flex-col px-8 pt-8 w-full justify-between md:h-60">
-                                <div class="">
-                                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Tour Tham Quan Hà Nội Bằng Xe Máy</h5>
-                                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Thời lượng: <span>4 giờ</span></p>
-                                    <hr class="my-6 bg-gray-500 w-full" />
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <p class="text-lg font-bold text-secondary">1,045,726<span>đ</span> / Khách</p>
-                                    <button class="px-5 py-3 text-sm font-medium text-center text-secondary bg-primary rounded-3xl hover:bg-secondary hover:text-white shadow-3xl">Đặt ngay</button>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#" class="flex flex-col items-center bg-white border border-gray-200 rounded-3xl shadow md:flex-row  hover:bg-gray-100 hover:shadow-3xl p-6 mb-8">
-                            <img class="object-cover rounded-lg md:h-60 md:w-80 md:rounded-3xl" src="../assets/images/toursImg/AmThucPhoCoImg.webp" alt="">
-                            <div class="flex flex-col px-8 pt-8 w-full justify-between md:h-60">
-                                <div class="">
-                                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Tour Ẩm Thực Phố Cổ Hà Nội</h5>
-                                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Thời lượng: <span>3 giờ</span></p>
-                                    <hr class="my-6 bg-gray-500 w-full" />
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <p class="text-lg font-bold text-secondary">459,124<span>đ</span> / Khách</p>
-                                    <button class="px-5 py-3 text-sm font-medium text-center text-secondary bg-primary rounded-3xl hover:bg-secondary hover:text-white shadow-3xl">Đặt ngay</button>
-                                </div>
-                            </div>
-                        </a>
+                        <ul >
+                            <li v-for="tour in tours" :key="tour._id">
+                               <router-link :to="'/tours/tour-detail/' + tour._id" class="flex flex-col items-center bg-white border border-gray-200 rounded-3xl shadow md:flex-row  hover:bg-gray-100 hover:shadow-3xl p-6 mb-8">
+                                    <img class="object-cover rounded-lg md:h-60 md:w-80 md:rounded-3xl" :src="tour.photo" :alt="tour.title">
+                                    <div class="flex flex-col px-8 pt-8 w-full justify-between md:h-60">
+                                        <div class="">
+                                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ tour.title }}</h5>
+                                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Thời lượng: <span>{{ tour.tourTime }} giờ</span></p>
+                                            <p class="text-sm"><font-awesome-icon :icon="['fas', 'star']" class="text-yellow-300"/> <span>{{ getAverageRating(tour.reviews) }}</span> (<span>{{ tour.reviews.length }}</span>) đánh giá</p>
+                                            <hr class="my-6 bg-gray-500 w-full" />
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <p class="text-lg font-bold text-secondary">{{ tour.priceForAdults }}<span>đ</span> / Khách</p>
+                                            <button class="px-5 py-3 text-sm font-medium text-center text-secondary bg-primary rounded-3xl hover:bg-secondary hover:text-white shadow-3xl">Đặt ngay</button>
+                                        </div>
+                                    </div>
+                                </router-link>  
+                            </li>
+                        </ul>
+                       
+                      
                     </div>
 
                     <!-- pagination -->
