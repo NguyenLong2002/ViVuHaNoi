@@ -25,6 +25,7 @@ const router = createRouter({
     history: createWebHistory(), // Sử dụng createWebHistory thay vì VueRouter
     routes
 });
+
 const app = createApp(App);
   app.component('font-awesome-icon', FontAwesomeIcon);
   app.use(router);

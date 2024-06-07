@@ -68,9 +68,9 @@
 <script>
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
-import LoginModal from '../LoginPage.vue';
-import RegisterModal from '../RegisterPage.vue';
-import EmailModal from '../EmailForm.vue';
+import LoginModal from '../pages/LoginPage.vue';
+import RegisterModal from '../pages/RegisterPage.vue';
+import EmailModal from '../pages/EmailForm.vue';
 
 export default {
   components: {

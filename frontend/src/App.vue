@@ -1,38 +1,26 @@
-
+<template>
+  <router-view/>
+</template>
 
 <script>
-import HeaderApp from './pages/components/HeaderApp.vue';
-import FooterApp from './pages/components/FooterApp.vue'
 import 'flowbite';
 
-import { onMounted } from 'vue'
+import { onMounted } from 'vue';
 import {  
     initFlowbite ,
     initCarousels,
     initDropdowns, 
-    } from 'flowbite'
-    onMounted(() => {
+} from 'flowbite'
+onMounted(() => {
       initFlowbite();
       initDropdowns();
       initCarousels();
-    });
-export default {
-  setup() {
-    
-    
-  },
-  components: {
-    HeaderApp,
-    FooterApp
-  }
-}
+});
+    export default {
+      setup() {
+      }
+    }
 </script>
-
-<template>
-  <HeaderApp />
-  <router-view/>
-  <FooterApp />
-</template>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');

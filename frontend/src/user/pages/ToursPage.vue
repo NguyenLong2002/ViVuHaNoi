@@ -1,5 +1,5 @@
 <script setup>
-import TourSearch from './components/TourSearch.vue';
+import TourSearch from '../components/TourSearch.vue';
 import { onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
 
