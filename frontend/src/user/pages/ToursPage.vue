@@ -10,6 +10,8 @@ onMounted(() => {
 });
 
 const tours = computed(() => store.state.tour.tours);
+
+
 const getAverageRating = (reviews) => {
   if (!reviews || !Array.isArray(reviews) || reviews.length === 0) return 0;
   const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);

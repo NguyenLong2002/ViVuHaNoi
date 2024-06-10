@@ -17,6 +17,7 @@ import {
   faCircleXmark,
   faCaretRight,
   faAngleLeft,
+  
  } from '@fortawesome/free-solid-svg-icons';
 
 library.add(faArrowRight,faStar,faCircleCheck,faCircleXmark,faCaretRight,faAngleLeft);

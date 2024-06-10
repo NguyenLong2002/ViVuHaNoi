@@ -1,20 +1,31 @@
 <template>
   <div v-if="isAdmin">
-    <router-view />
+    <HeaderAdmin />
+    <SidebarAdmin />
+    <div class="sm:ml-64">
+      <RouterView />
+    </div>
   </div>
   <div v-else>
-    <p>You do not have access to this page</p>
+    <p>Access Denied</p>
   </div>
 </template>
 
+
 <script>
 import { checkAdmin } from '../utils/utility';
-
+import HeaderAdmin from './components/HeaderAdmin.vue';
+import SidebarAdmin from './components/SidebarAdmin.vue'
 export default {
   name: 'AdminApp',
+  components:{
+    HeaderAdmin,
+    SidebarAdmin
+  },
   data() {
     return {
-      isAdmin: false
+      isAdmin: false,
+      
     };
   },
   async created() {
@@ -22,6 +33,7 @@ export default {
   }
 }
 </script>
+
 
 <style scoped>
 /* Add admin-specific styles here */
