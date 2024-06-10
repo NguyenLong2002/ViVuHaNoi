@@ -1,10 +1,22 @@
 const express = require("express");
+const multer = require('multer');
 const router = express.Router();
 const tourController = require("../controllers/tourController");
 const middlewareController = require("../controllers/middlewareController");
+const path = require('path');
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, '../assets/images/tour/'));
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage });
 
 // Create new tour
-router.post("/",middlewareController.verifyAdmin, tourController.createTour);
+router.post("/",upload.array('photos', 12),middlewareController.verifyAdmin, tourController.createTour);
 // update new tour
 router.put("/:id",middlewareController.verifyAdmin, tourController.updateTour);
 // delete new tour

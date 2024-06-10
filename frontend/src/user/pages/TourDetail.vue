@@ -2,6 +2,7 @@
 import { onMounted, computed, ref,watchEffect  } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
+const backendBaseUrl = 'http://localhost:8000';
 
 const store = useStore();
 const route = useRoute();
@@ -28,6 +29,16 @@ onMounted(async () => {
 const tour = computed(() => {
   return store.state.tour.singleTour;
 });
+
+
+const getTourPhotoUrl = (photos) => {
+    if (photos) {
+        return `${backendBaseUrl}${photos.split('\\').join('/')}`;
+    } else {
+        return `${backendBaseUrl}/images/tour/default.jpg`;
+    }
+};
+
 //Tính trung bình đánh giá
 const getAverageRating = (reviews) => {
   if (!reviews || !Array.isArray(reviews) || reviews.length === 0) return 0;
@@ -95,25 +106,18 @@ const clearAllOption = () =>{
         <div class="w-3/4 mx-auto flex justify-center mt-8">
             <div class="grid gap-4 grid-flow-col grid-cols-12">
 
-                <div class="col-span-6">
-                    <img class="h-96 w-full rounded-lg " :src="tour.photo" :alt="tour.title">
+                <div class="col-span-8">
+                    <img class="h-96 w-full rounded-lg " :src="getTourPhotoUrl(tour.photos[1])" :alt="tour.title">
                 </div>
-                <div class="grid row-span-1 gap-4 col-span-3">
+                <div class="grid row-span-1 gap-4 col-span-4">
                     <div>
-                        <img class="h-[184px] w-full rounded-lg" :src="tour.photo" :alt="tour.title">
+                        <img class="h-[184px] w-full rounded-lg" :src="getTourPhotoUrl(tour.photos[2])" :alt="tour.title">
                     </div>
                     <div>
-                        <img class="h-[184px] w-full rounded-lg" :src="tour.photo" :alt="tour.title">
-                    </div>
-                </div>
-                <div class="grid row-span-1 gap-4 col-span-3">
-                    <div>
-                        <img class="h-[184px] w-full rounded-lg" :src="tour.photo" :alt="tour.title">
-                    </div>
-                    <div>
-                        <img class="h-[184px] w-full rounded-lg" :src="tour.photo" :alt="tour.title">
+                        <img class="h-[184px] w-full rounded-lg" :src="getTourPhotoUrl(tour.photos[0])" :alt="tour.title">
                     </div>
                 </div>
+               
             </div>
 
         </div>

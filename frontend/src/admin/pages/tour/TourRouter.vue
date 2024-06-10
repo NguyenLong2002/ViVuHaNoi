@@ -1,5 +1,5 @@
 <template>
-      <div class="pt-32">
+      <div class="h-screen">
         <RouterView />
       </div>
   </template>

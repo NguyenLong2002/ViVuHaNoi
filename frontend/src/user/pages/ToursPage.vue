@@ -3,6 +3,7 @@ import TourSearch from '../components/TourSearch.vue';
 import { onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
 
+const backendBaseUrl = 'http://localhost:8000';
 const store = useStore();
 
 onMounted(() => {
@@ -16,6 +17,15 @@ const getAverageRating = (reviews) => {
   if (!reviews || !Array.isArray(reviews) || reviews.length === 0) return 0;
   const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
   return (totalRating / reviews.length).toFixed(1);
+};
+
+const getTourPhotoUrl = (photos) => {
+    if (Array.isArray(photos) && photos.length > 0) {
+        
+        return `${backendBaseUrl}${photos[0]}`;
+    } else {
+        return 'default.jpg';
+    }
 };
 
 </script>
@@ -74,7 +84,7 @@ const getAverageRating = (reviews) => {
                             </div>
                             <div class="flex items-center mb-4">
                                 <input id="disabled-checkbox" type="checkbox" value="" class="w-4 h-4 text-primary cursor-pointer bg-gray-100 border-gray-300 rounded focus:ring-primary ">
-                                <label for="disabled-checkbox" class="ms-2 text-sm font-medium text-gray-800 ">Thuyền</label>
+                                <label for="disabled-checkbox" class="ms-2 text-sm font-medium text-gray-800 ">Xe bus</label>
                             </div>
                         </div>
                     </div>
@@ -84,16 +94,20 @@ const getAverageRating = (reviews) => {
                         <ul >
                             <li v-for="tour in tours" :key="tour._id">
                                <router-link :to="'/tours/tour-detail/' + tour._id" class="flex flex-col items-center bg-white border border-gray-200 rounded-3xl shadow md:flex-row  hover:bg-gray-100 hover:shadow-3xl p-6 mb-8">
-                                    <img class="object-cover rounded-lg md:h-60 md:w-80 md:rounded-3xl" :src="tour.photo" :alt="tour.title">
-                                    <div class="flex flex-col px-8 pt-8 w-full justify-between md:h-60">
+                                    <img class="object-cover rounded-lg md:h-60 md:w-80 md:rounded-3xl" :src="getTourPhotoUrl(tour.photos)" :alt="tour.title">
+                                    <div class="flex flex-col px-8  w-full justify-between ">
                                         <div class="">
                                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ tour.title }}</h5>
-                                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Thời lượng: <span>{{ tour.tourTime }} giờ</span></p>
-                                            <p class="text-sm"><font-awesome-icon :icon="['fas', 'star']" class="text-yellow-300"/> <span>{{ getAverageRating(tour.reviews) }}</span> (<span>{{ tour.reviews.length }}</span>) đánh giá</p>
+                                            <p class=" font-normal text-gray-900 dark:text-gray-400">Địa chỉ: {{ tour.address }}</p>
+                                            <div class="flex justify-between mt-1">
+                                                <p class="font-normal text-gray-900 dark:text-gray-400">Thời lượng: {{ tour.tourTime }} giờ</p>
+                                                <p class="font-normal text-gray-900 dark:text-gray-400">Phương tiện: {{ tour.vehicle }}</p>
+                                            </div>
+                                            <p class="text-sm mt-4"><font-awesome-icon :icon="['fas', 'star']" class="text-yellow-300"/> <span>{{ getAverageRating(tour.reviews) }}</span> (<span>{{ tour.reviews.length }}</span>) đánh giá</p>
                                             <hr class="my-6 bg-gray-500 w-full" />
                                         </div>
                                         <div class="flex items-center justify-between">
-                                            <p class="text-lg font-bold text-secondary">{{ tour.priceForAdults }}<span>đ</span> / Khách</p>
+                                            <p class="text-lg font-bold text-secondary">{{ tour.priceForChildren }}đ - {{ tour.priceForAdults }}đ / Khách</p>
                                             <button class="px-5 py-3 text-sm font-medium text-center text-secondary bg-primary rounded-3xl hover:bg-secondary hover:text-white shadow-3xl">Đặt ngay</button>
                                         </div>
                                     </div>

@@ -17,4 +17,6 @@ onMounted(() => {
 });
 
 const tours = computed(() => store.state.tour.tours);
+
+
 </script>

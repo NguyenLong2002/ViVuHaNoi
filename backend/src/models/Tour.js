@@ -19,10 +19,10 @@ const tourSchema = new mongoose.Schema(
             type:String,
             required:true,
          },
-        photo:{
-            type:String,
-            required:true,
-        },
+        photos:[{ 
+            type: String, 
+            required: true 
+        }],
          priceForAdults:{
              type:Number,
              required:true,

@@ -3,13 +3,17 @@ const Tour = require("../models/Tour");
 const tourController = {
     //createTour
     createTour: async (req, res) => {
-        const newTour = new Tour(req.body);
-        try{
+        try {
+            const photos = req.files.map(file => `/images/tour/${file.filename}`);
+            const newTour = new Tour({
+                ...req.body,
+                photos
+            });
             const savedTour = await newTour.save();
-
-            res.status(200).json({success:true,message:"Successfully create", data:savedTour,});
-        }catch(err){
-            res.status(500).json({success:false,message:"Failed to create. Try again",})
+            res.status(200).json({ success: true, message: 'Successfully created', data: savedTour });
+        } catch (err) {
+            console.error('Error creating tour:', err);  // Log the detailed error
+            res.status(500).json({ success: false, message: 'Failed to create. Try again', error: err.message });
         }
     },
     //updateTour
