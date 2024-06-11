@@ -28,6 +28,10 @@ const getTourPhotoUrl = (photos) => {
     }
 };
 
+const formatPrice = (value) => {
+      return new Intl.NumberFormat('vi-VN').format(value);
+};
+
 </script>
 
 <template>
@@ -107,7 +111,7 @@ const getTourPhotoUrl = (photos) => {
                                             <hr class="my-6 bg-gray-500 w-full" />
                                         </div>
                                         <div class="flex items-center justify-between">
-                                            <p class="text-lg font-bold text-secondary">{{ tour.priceForChildren }}đ - {{ tour.priceForAdults }}đ / Khách</p>
+                                            <p class="text-lg font-bold text-secondary">{{ formatPrice(tour.priceForAdults) }}đ / Khách</p>
                                             <button class="px-5 py-3 text-sm font-medium text-center text-secondary bg-primary rounded-3xl hover:bg-secondary hover:text-white shadow-3xl">Đặt ngay</button>
                                         </div>
                                     </div>

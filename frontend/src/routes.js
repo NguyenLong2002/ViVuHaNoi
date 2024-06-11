@@ -12,6 +12,7 @@ import TourRouter from './admin/pages/tour/TourRouter.vue'
 import ShowTours from './admin/pages/tour/ShowTours.vue';
 import CreateTour from './admin/pages/tour/CreateTour.vue';
 import UpdateTour from './admin/pages/tour/UpdateTour.vue';
+import TrashTour from './admin/pages/tour/TrashTour.vue';
 
 
 import UserAdmin from './admin/pages/user/ShowUsers.vue';
@@ -48,9 +49,13 @@ export const routes = [
             component: CreateTour,
           },
           {
-            path: 'update/:id',
+            path: ':id/edit',
             component: UpdateTour,
           },
+          {
+            path: 'trash',
+            component: TrashTour,
+          }
         ]
       },
       {

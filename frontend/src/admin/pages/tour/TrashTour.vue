@@ -25,11 +25,9 @@ export default {
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg px-8 pt-32 h-full">
         <div v-if="tours && tours.length > 0 ">
             <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
-                <div class="flex item-center justify-center">
-                        <router-link to="/admin/tours/add" class="focus:outline-none text-white bg-primary hover:bg-secondary focus:ring-4 focus:ring-green-300 font-semibold rounded-lg text-sm px-8 py-2 ">Thêm mới</router-link>
-                        <router-link to="/admin/tours/trash" class="ml-6 text-3xl">
-                            <font-awesome-icon :icon="['fas', 'trash-can']" />
-                        </router-link>
+                <div class="flex items-center font-semibold cursor-pointer">
+                    <font-awesome-icon class="text-primary ml-2" :icon="['fas', 'chevron-left']" />
+                    <Router-Link to="/admin/tours"><span class="ml-1 hover:text-primary">Quay lại</span></Router-Link>
                 </div>
                 
                 <div class="relative">
@@ -55,25 +53,7 @@ export default {
                             Địa chỉ
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Thành phố
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Phương tiện
-                        </th>
-                        <th scope="col" class="px-6 py-3">
                             Giá cho người lớn (vnđ)
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Giá cho trẻ nhỏ (vnđ)
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Người tham gia tối đa
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Thời gian trải nghiệm (h)
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Tour Đặc biệt
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Hành động
@@ -89,35 +69,17 @@ export default {
                             </div>
                         </td>
                         <th  class="text-start">
-                            {{ tour.title }}
+                            {{ tour.title }} sdhfksdhfkjsdfkdshfkdjshfkdsjhfk
                         </th>
                         <td  class="text-start">
                             {{ tour.address }}
                         </td>
                         <td class="">
-                            {{ tour.city }}
-                        </td>
-                        <td class="">
-                            {{ tour.vehicle }}
-                        </td>
-                        <td class="">
                             {{ tour.priceForAdults }}                    
                         </td>
-                        <td class="">
-                            {{ tour.priceForChildren }}
-                        </td>
-                        <td class="">
-                            {{ tour.maxGroupSize }}                    
-                        </td>
-                        <td class="">
-                            {{ tour.tourTime }}
-                        </td>
-                        <td class="">
-                            {{ tour.featured ? 'Có' : 'Không' }}
-                        </td>
-                        <td class=" ">
-                            <router-link :to="'tours/'+tour._id+ '/edit'" class="font-semibold text-white p-2 bg-yellow-400 hover:bg-yellow-300 rounded-lg mr-1">Sửa</router-link>
-                            <a href="#" class="font-semibold text-white p-2 bg-red-600 hover:bg-red-500  rounded-lg">Xóa</a>
+                        <td class=" flex flex-col items-center py-2">
+                            <router-link :to="'tours/'+tour._id+ '/edit'" class="font-semibold text-white p-2 bg-yellow-400 hover:bg-yellow-300 rounded-lg">Khôi phục</router-link>
+                            <a href="#" class="font-semibold text-white p-2 bg-red-600 hover:bg-red-500  rounded-lg mt-2">Xóa vĩnh viễn</a>
                         </td>
                     </tr>
                 
@@ -126,8 +88,8 @@ export default {
         </div>
         <div v-else>
             <div class="text-center">
-                <h1 class="text-3xl font-bold text-gray-900 mb-4">Bạn chưa có tour nào!</h1>
-                <router-link to="/admin/tours/add" class="focus:outline-none text-white bg-primary hover:bg-secondary focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2">Thêm mới</router-link>
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">Thùng rác trống!</h1>
+                <router-link to="/admin/tours" class="focus:outline-none text-white bg-primary hover:bg-secondary focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2">Quay lại</router-link>
             </div>
         </div>
     </div>

@@ -73,6 +73,11 @@ const decrementChildren = () => {
     }
 };
 
+
+const formatPrice = (value) => {
+      return new Intl.NumberFormat('vi-VN').format(value);
+};
+
 //Tính tổng tiền
 const total = computed(() =>{
     const totalAmount = adults.value*priceForAdults.value + children.value*priceForChildren.value;
@@ -93,28 +98,28 @@ const clearAllOption = () =>{
 
 <template>
     <div v-if="tour" class="mt-24" id="ToutDetail">
-        <div class="mx-auto w-3/4 flex justify-between px-8">
-            <div class="">
+        <div class="mx-auto w-3/4 flex justify-between">
+            <div class="w-3/5">
                 <h1 class="text-4xl font-bold tracking-tight text-gray-900">{{ tour.title }}</h1>
                 <p class="text-xl mt-2"><font-awesome-icon :icon="['fas', 'star']" class="text-yellow-300"/> <span class="text-yellow-300">{{ getAverageRating(tour.reviews) }}</span> (<span>{{ tour.reviews.length }}</span> đánh giá)</p>
             </div>
             <div class="">
-                <p class="text-4xl font-bold text-secondary">{{ tour.priceForAdults }}<span> đ</span> / Khách</p>
+                <p class="text-4xl font-bold text-secondary">{{ formatPrice(tour.priceForAdults) }}<span> đ</span> / Khách</p>
             </div>
         </div>
 
-        <div class="w-3/4 mx-auto flex justify-center mt-8">
-            <div class="grid gap-4 grid-flow-col grid-cols-12">
+        <div class="w-3/4 mx-auto flex  mt-8">
+            <div class="grid gap-4 grid-flow-col grid-cols-12 w-full">
 
                 <div class="col-span-8">
-                    <img class="h-96 w-full rounded-lg " :src="getTourPhotoUrl(tour.photos[1])" :alt="tour.title">
+                    <img class="h-96 w-full rounded-lg " :src="getTourPhotoUrl(tour.photos[0])" :alt="tour.title">
                 </div>
                 <div class="grid row-span-1 gap-4 col-span-4">
                     <div>
-                        <img class="h-[184px] w-full rounded-lg" :src="getTourPhotoUrl(tour.photos[2])" :alt="tour.title">
+                        <img class="h-[184px] w-full rounded-lg" :src="getTourPhotoUrl(tour.photos[1])" :alt="tour.title">
                     </div>
                     <div>
-                        <img class="h-[184px] w-full rounded-lg" :src="getTourPhotoUrl(tour.photos[0])" :alt="tour.title">
+                        <img class="h-[184px] w-full rounded-lg" :src="getTourPhotoUrl(tour.photos[2])" :alt="tour.title">
                     </div>
                 </div>
                
@@ -195,7 +200,7 @@ const clearAllOption = () =>{
                     <div class="mt-2 flex justify-between items-center px-4 py-2 bg-white rounded-md">
                         <p class="font-semibold text-gray-900">Người lớn</p>
                         <div class="flex items-center">
-                            <p class="text-gray-900 mr-3 font-semibold">{{ tour.priceForAdults }}<span>đ</span></p>
+                            <p class="text-gray-900 mr-3 font-semibold">{{ formatPrice(tour.priceForAdults) }}<span>đ</span></p>
                             <form class="">
                                     <div class="relative flex items-center max-w-32">
                                         <button @click="decrementAdults" type="button" id="decrement-button" data-input-counter-decrement="people-input" class="bg-gray-100  hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100  focus:ring-2 focus:outline-none">
@@ -214,10 +219,10 @@ const clearAllOption = () =>{
                             </form>
                         </div>
                     </div>
-                    <div class="mt-2 flex justify-between items-center px-4 py-2 bg-white rounded-md ">
+                    <div v-if="tour.priceForChildren > 0 " class="mt-2 flex justify-between items-center px-4 py-2 bg-white rounded-md ">
                         <p class="font-semibold text-gray-900">Trẻ em(5-8)</p>
                         <div class="flex items-center">
-                            <p class="text-gray-900 mr-3 font-semibold">{{ tour.priceForChildren}}<span>đ</span></p>
+                            <p class="text-gray-900 mr-3 font-semibold">{{ formatPrice(tour.priceForChildren)}}<span>đ</span></p>
                             <form class="">
                                     <div class="relative flex items-center max-w-32">
                                         <button @click="decrementChildren" type="button" id="decrement-button" data-input-counter-decrement="people-input" class="bg-gray-100  hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100  focus:ring-2 focus:outline-none">
