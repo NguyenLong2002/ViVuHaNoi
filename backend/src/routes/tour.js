@@ -21,6 +21,12 @@ router.post("/",upload.array('photos', 12),middlewareController.verifyAdmin, tou
 router.put("/:id",middlewareController.verifyAdmin, tourController.updateTour);
 // delete new tour
 router.delete("/:id",middlewareController.verifyAdmin, tourController.deleteTour);
+// soft delete tour
+router.put('/soft-delete/:id',middlewareController.verifyAdmin, tourController.softDeleteTour); 
+// get deleted tours
+router.get('/trash',middlewareController.verifyAdmin,tourController.getDeletedTours); 
+// restore deleted tour
+router.put('/restore/:id',middlewareController.verifyAdmin,tourController.restoreTour); 
 
 // get single tour
 router.get("/:id", tourController.getSingleTour);

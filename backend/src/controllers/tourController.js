@@ -28,6 +28,18 @@ const tourController = {
             res.status(500).json({success:false,message:"Failed to update. Try again",})
         }
     },
+    // Soft delete tour
+    softDeleteTour: async (req, res) => {
+        const id = req.params.id;
+        try {
+        const updatedTour = await Tour.findByIdAndUpdate(id, {
+            $set: { isDeleted: true }
+        }, { new: true });
+        res.status(200).json({ success: true, message: "Successfully soft deleted", data: updatedTour });
+        } catch (err) {
+        res.status(500).json({ success: false, message: "Failed to soft delete. Try again" });
+        }
+    },
     //deleteTour
     deleteTour:async(req, res)=>{
         const id = req.params.id;
@@ -36,6 +48,27 @@ const tourController = {
             res.status(200).json({success:true,message:"Successfully deleted"});
         }catch(err){
             res.status(500).json({success:false,message:"Failed to delete. Try again",})
+        }
+    },
+    // Restore tour
+    restoreTour: async (req, res) => {
+        const id = req.params.id;
+        try {
+        const restoredTour = await Tour.findByIdAndUpdate(id, {
+            $set: { isDeleted: false }
+        }, { new: true });
+        res.status(200).json({ success: true, message: "Successfully restored", data: restoredTour });
+        } catch (err) {
+        res.status(500).json({ success: false, message: "Failed to restore. Try again" });
+        }
+    },
+    // Get deleted tours
+    getDeletedTours: async (req, res) => {
+        try {
+        const tours = await Tour.find({ isDeleted: true });
+        res.status(200).json({ success: true, data: tours });
+        } catch (err) {
+        res.status(500).json({ success: false, message: "Failed to fetch deleted tours. Try again" });
         }
     },
     //getSingleTour
@@ -54,7 +87,7 @@ const tourController = {
         //for pagination
         const page = parseInt(req.query.page);
         try{
-            const tours = await Tour.find({}).populate("reviews").skip(page * 6).limit(6);
+            const tours = await Tour.find({isDeleted:false}).populate("reviews").skip(page * 6).limit(6);
             res.status(200).json({success:true,message:"Successful ",count:tours.length, data:tours});
         }catch(err){
             res.status(404).json({success:false,message:"Not found",})
@@ -87,7 +120,7 @@ const tourController = {
     //get featured tours
     getFeaturedTours:async(req, res)=>{
         try{
-            const tours = await Tour.find({featured:true}).populate("reviews").limit(6);
+            const tours = await Tour.find({featured:true,isDeleted:false}).populate("reviews").limit(6);
             res.status(200).json({success:true,message:"Successful ",count:tours.length, data:tours});
         }catch(err){
             res.status(404).json({success:false,message:"Not found",})
