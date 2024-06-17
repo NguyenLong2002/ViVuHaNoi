@@ -1,28 +1,50 @@
-<script>
+<script setup>
 import { onMounted,computed } from 'vue';
-import { initDropdowns } from 'flowbite';
 import { useStore } from 'vuex';
 
-export default {
-  setup() {
-    const store = useStore();
+const store = useStore();
+onMounted(() => {
+    store.dispatch('tour/getDeletedTours');
+});
 
-    onMounted(() => {
-      store.dispatch('tour/getTours');
-      initDropdowns();
-    });
+const tours = computed(() => store.state.tour.deletedTours);
 
-    const tours = computed(() => store.state.tour.tours);
-
-    return {
-      tours,
-    };
-  },
+//Restore Tour Deleted
+const restoreTour = async (tourId) =>{
+    if(confirm('Bại có muốn khôi phục tour này không?')){
+       try{
+        await store.dispatch('tour/restoreTour',tourId);
+        alert('Khôi phục thành công!');
+        await store.dispatch('tour/getDeletedTours')
+        }catch(error){
+            console.log('Error restoring tour:',error);
+            alert('Khôi phục thất bại!');
+        } 
+    }else{
+        alert('Hủy khôi phục!');
+    }
 };
+
+//Hard Tour Deleted
+const hardDeletedTour = async (tourId) =>{
+    if(confirm('Bạn có muốn xóa vĩnh viễn tour này không?')){
+        try{
+            await store.dispatch('tour/hardDeleteTour', tourId);
+            alert('Xóa tour thành công!');
+            await store.dispatch('tour/getDeletedTours');
+        }catch(err){
+            console.log('Error hard deleting tour:', err);
+            alert('Xóa tour thất bại');
+        }
+    }else{
+        alert('Hủy xóa vĩnh viễn tour!');
+    }
+}
+
 </script>
 
 <template>
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg px-8 pt-32 h-full">
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg px-8 h-screen pt-32">
         <div v-if="tours && tours.length > 0 ">
             <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
                 <div class="flex items-center font-semibold cursor-pointer">
@@ -50,7 +72,7 @@ export default {
                             Tên tour
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Địa chỉ
+                            Tour đặc biệt
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Giá cho người lớn (vnđ)
@@ -69,27 +91,26 @@ export default {
                             </div>
                         </td>
                         <th  class="text-start">
-                            {{ tour.title }} sdhfksdhfkjsdfkdshfkdjshfkdsjhfk
+                            {{ tour.title }}
                         </th>
                         <td  class="text-start">
-                            {{ tour.address }}
+                            {{ tour.featured ? 'Có':'Không' }}
                         </td>
                         <td class="">
                             {{ tour.priceForAdults }}                    
                         </td>
                         <td class=" flex flex-col items-center py-2">
-                            <router-link :to="'tours/'+tour._id+ '/edit'" class="font-semibold text-white p-2 bg-yellow-400 hover:bg-yellow-300 rounded-lg">Khôi phục</router-link>
-                            <a href="#" class="font-semibold text-white p-2 bg-red-600 hover:bg-red-500  rounded-lg mt-2">Xóa vĩnh viễn</a>
+                            <button @click="restoreTour(tour._id)" class="font-semibold text-white p-2 bg-yellow-400 hover:bg-yellow-300 rounded-lg">Khôi phục</button>
+                            <button @click="hardDeletedTour(tour._id)" class="font-semibold text-white p-2 bg-red-600 hover:bg-red-500  rounded-lg mt-2">Xóa vĩnh viễn</button>
                         </td>
                     </tr>
-                
                 </tbody>
             </table>
         </div>
         <div v-else>
-            <div class="text-center">
+            <div class="text-center pt-32">
                 <h1 class="text-3xl font-bold text-gray-900 mb-4">Thùng rác trống!</h1>
-                <router-link to="/admin/tours" class="focus:outline-none text-white bg-primary hover:bg-secondary focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2">Quay lại</router-link>
+                <router-link to="/admin/tours" class="focus:outline-none text-white bg-primary hover:bg-secondary focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5">Quay lại</router-link>
             </div>
         </div>
     </div>

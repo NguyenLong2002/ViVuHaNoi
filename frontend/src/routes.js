@@ -14,8 +14,8 @@ import CreateTour from './admin/pages/tour/CreateTour.vue';
 import UpdateTour from './admin/pages/tour/UpdateTour.vue';
 import TrashTour from './admin/pages/tour/TrashTour.vue';
 
-
-import UserAdmin from './admin/pages/user/ShowUsers.vue';
+import UserRouter from './admin/pages/user/UserRouter.vue';
+import ShowUsers from './admin/pages/user/ShowUsers.vue';
 import BlogAdmin from './admin/pages/blog/ShowBlogs.vue';
 import { checkAdmin } from './utils/utility';
 
@@ -60,7 +60,25 @@ export const routes = [
       },
       {
         path: 'users',
-        component: UserAdmin
+        component: UserRouter,
+        children: [
+          {
+            path: '',
+            component: ShowUsers,
+          },
+          // {
+          //   path: 'add',
+          //   component: CreateTour,
+          // },
+          // {
+          //   path: ':id/edit',
+          //   component: UpdateTour,
+          // },
+          // {
+          //   path: 'trash',
+          //   component: TrashTour,
+          // }
+        ]
       },
       {
         path: 'blogs',

@@ -1,45 +1,84 @@
-<script>
-import { onMounted,computed } from 'vue';
+<script setup>
+import { ref, onMounted,computed} from 'vue';
 import { initDropdowns } from 'flowbite';
 import { useStore } from 'vuex';
 
-export default {
-  setup() {
-    const store = useStore();
+const sortOrder = ref('asc');
 
-    onMounted(() => {
+const store = useStore();
+
+const tours = computed(() => {
+  const sortedTours = [...store.state.tour.tours];
+  if (sortOrder.value === 'asc') {
+    return sortedTours.sort((a, b) => a.priceForAdults - b.priceForAdults);
+  } else {
+    return sortedTours.sort((a, b) => b.priceForAdults - a.priceForAdults);
+  }
+});
+
+const sortTours = (event) => {
+  sortOrder.value = event.target.value;
+};
+
+const toursDeleted = computed(() => store.state.tour.deletedTours);
+
+onMounted(() => {
       store.dispatch('tour/getTours');
+      store.dispatch('tour/getDeletedTours');
       initDropdowns();
     });
 
-    const tours = computed(() => store.state.tour.tours);
 
-    return {
-      tours,
-    };
-  },
+// const selectedFeatured = ref('FeaturedTour');
+
+
+const softDeleteTour = async (tourId) =>{
+    if(confirm('Bạn có muốn xóa tour này không?')){
+        try{
+        await store.dispatch('tour/softDeleteTour',tourId);
+        alert('Xoa thanh cong!');
+        await store.dispatch('tour/getTours');
+        await store.dispatch('tour/getDeletedTours');
+        }catch(error){
+            console.log('Error soft deleting tour:',error);
+            alert('Xoa that bai!');
+        }
+    }else{
+        alert('Hủy xóa tour!');
+    }
+    
 };
+
 </script>
 
 <template>
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg px-8 pt-32 h-full">
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg px-8 pt-32 h-screen">
         <div v-if="tours && tours.length > 0 ">
             <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
                 <div class="flex item-center justify-center">
                         <router-link to="/admin/tours/add" class="focus:outline-none text-white bg-primary hover:bg-secondary focus:ring-4 focus:ring-green-300 font-semibold rounded-lg text-sm px-8 py-2 ">Thêm mới</router-link>
-                        <router-link to="/admin/tours/trash" class="ml-6 text-3xl">
+
+                        <router-link to="/admin/tours/trash" class="relative ml-6 text-3xl text-gray-700">
                             <font-awesome-icon :icon="['fas', 'trash-can']" />
+                            <span class="absolute -top-1 -right-2 px-1.5 bg-red-700 text-sm rounded-full text-white font-semibold">
+                                {{ toursDeleted.length }}
+                            </span>
                         </router-link>
                 </div>
                 
-                <div class="relative">
-                        <div class="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
-                            <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
-                        </div>
-                        <input type="text" id="table-search" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for items">
+                <div class="flex">
+                    <div class="mr-4">
+                        <form class="max-w-sm mx-auto flex">
+                            <select @change="sortTours" id="small" class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option class="py-2 " value="asc" selected>Giá: Thấp đến Cao</option>
+                                <option class="py-2 " value="des">Giá: Cao đến thấp</option>
+                            </select>
+                        </form>
+                    </div>
+                    
                 </div>
             </div>
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">  
+            <table  class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">  
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center">
                     <tr>
                         <th scope="col" class="p-4">
@@ -50,9 +89,6 @@ export default {
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Tên tour
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Địa chỉ
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Thành phố
@@ -88,12 +124,9 @@ export default {
                                 <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
                             </div>
                         </td>
-                        <th  class="text-start">
+                        <th  class="text-start py-2">
                             {{ tour.title }}
                         </th>
-                        <td  class="text-start">
-                            {{ tour.address }}
-                        </td>
                         <td class="">
                             {{ tour.city }}
                         </td>
@@ -110,24 +143,35 @@ export default {
                             {{ tour.maxGroupSize }}                    
                         </td>
                         <td class="">
-                            {{ tour.tourTime }}
+                            {{ tour.endTime - tour.departureTime }}
                         </td>
                         <td class="">
                             {{ tour.featured ? 'Có' : 'Không' }}
                         </td>
                         <td class=" ">
-                            <router-link :to="'tours/'+tour._id+ '/edit'" class="font-semibold text-white p-2 bg-yellow-400 hover:bg-yellow-300 rounded-lg mr-1">Sửa</router-link>
-                            <a href="#" class="font-semibold text-white p-2 bg-red-600 hover:bg-red-500  rounded-lg">Xóa</a>
+                            <router-link :to="'tours/'+tour._id+ '/edit'" >
+                                <button class="font-semibold text-white px-2 py-1 bg-yellow-400 hover:bg-yellow-300 rounded-lg mr-1">
+                                    Sửa
+                                </button>
+                            </router-link>
+                            <button @click="softDeleteTour(tour._id)" class="font-semibold text-white px-2 py-1 bg-red-600 hover:bg-red-500  rounded-lg ">Xóa</button>
                         </td>
                     </tr>
                 
                 </tbody>
             </table>
+            
         </div>
         <div v-else>
-            <div class="text-center">
-                <h1 class="text-3xl font-bold text-gray-900 mb-4">Bạn chưa có tour nào!</h1>
-                <router-link to="/admin/tours/add" class="focus:outline-none text-white bg-primary hover:bg-secondary focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2">Thêm mới</router-link>
+            <div class="text-end mr-10">
+                <router-link to="/admin/tours/trash" class="ml-6 text-3xl">
+                    <font-awesome-icon :icon="['fas', 'trash-can']" />
+                </router-link>
+                </div>
+            <div class="text-center pt-32">
+                
+                <h1 class="text-3xl font-bold text-gray-900 mb-5">Bạn chưa có tour nào !</h1>
+                <router-link to="/admin/tours/add" class="focus:outline-none text-white bg-primary hover:bg-secondary focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-6 py-3">Thêm mới</router-link>
             </div>
         </div>
     </div>

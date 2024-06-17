@@ -14,7 +14,8 @@
      components: {
       HeaderApp,
       FooterApp
-    }
+    },
+    
   }
   </script>
 

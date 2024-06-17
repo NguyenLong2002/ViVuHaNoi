@@ -90,6 +90,14 @@ const formatPrice = (value) => {
                                 <input id="disabled-checkbox" type="checkbox" value="" class="w-4 h-4 text-primary cursor-pointer bg-gray-100 border-gray-300 rounded focus:ring-primary ">
                                 <label for="disabled-checkbox" class="ms-2 text-sm font-medium text-gray-800 ">Xe bus</label>
                             </div>
+                            <div class="flex items-center mb-4">
+                                <input id="disabled-checkbox" type="checkbox" value="" class="w-4 h-4 text-primary cursor-pointer bg-gray-100 border-gray-300 rounded focus:ring-primary ">
+                                <label for="disabled-checkbox" class="ms-2 text-sm font-medium text-gray-800 ">Xe ô tô</label>
+                            </div>
+                            <div class="flex items-center mb-4">
+                                <input id="disabled-checkbox" type="checkbox" value="" class="w-4 h-4 text-primary cursor-pointer bg-gray-100 border-gray-300 rounded focus:ring-primary ">
+                                <label for="disabled-checkbox" class="ms-2 text-sm font-medium text-gray-800 ">Xe xích lô</label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -102,9 +110,8 @@ const formatPrice = (value) => {
                                     <div class="flex flex-col px-8  w-full justify-between ">
                                         <div class="">
                                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ tour.title }}</h5>
-                                            <p class=" font-normal text-gray-900 dark:text-gray-400">Địa chỉ: {{ tour.address }}</p>
                                             <div class="flex justify-between mt-1">
-                                                <p class="font-normal text-gray-900 dark:text-gray-400">Thời lượng: {{ tour.tourTime }} giờ</p>
+                                                <p class="font-normal text-gray-900 dark:text-gray-400">Thời lượng: {{ tour.endTime - tour.departureTime  }} giờ</p>
                                                 <p class="font-normal text-gray-900 dark:text-gray-400">Phương tiện: {{ tour.vehicle }}</p>
                                             </div>
                                             <p class="text-sm mt-4"><font-awesome-icon :icon="['fas', 'star']" class="text-yellow-300"/> <span>{{ getAverageRating(tour.reviews) }}</span> (<span>{{ tour.reviews.length }}</span>) đánh giá</p>

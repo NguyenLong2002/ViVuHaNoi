@@ -18,10 +18,11 @@ import {
   faCaretRight,
   faAngleLeft,
   faChevronLeft,
-  faTrashCan
+  faTrashCan,
+  faLocationDot
  } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faArrowRight,faStar,faCircleCheck,faCircleXmark,faCaretRight,faAngleLeft,faChevronLeft,faTrashCan);
+library.add(faArrowRight,faStar,faCircleCheck,faCircleXmark,faCaretRight,faAngleLeft,faChevronLeft,faTrashCan,faLocationDot);
 
 const router = createRouter({
     history: createWebHistory(), // Sử dụng createWebHistory thay vì VueRouter
