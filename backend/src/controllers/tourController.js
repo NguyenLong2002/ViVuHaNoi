@@ -4,10 +4,14 @@ const tourController = {
     //createTour
     createTour: async (req, res) => {
         try {
-            const photos = req.files.map(file => `/images/tour/${file.filename}`);
+            const photos = req.files ? req.files.map(file => `/images/tour/${file.filename}`) : [];
+
+            // Xử lý chuỗi destinations thành mảng
+            const destinations = req.body.destinations ? req.body.destinations.split(',').map(destination => destination.trim()) : [];
             const newTour = new Tour({
                 ...req.body,
-                photos
+                photos,
+                destinations
             });
             const savedTour = await newTour.save();
             res.status(200).json({ success: true, message: 'Successfully created', data: savedTour });
@@ -16,18 +20,47 @@ const tourController = {
             res.status(500).json({ success: false, message: 'Failed to create. Try again', error: err.message });
         }
     },
-    //updateTour
-    updateTour:async(req, res)=>{
-        const id = req.params.id;
-        try{
-            const updatedTour = await Tour.findByIdAndUpdate(id,{
-                $set : req.body
-            },{new:true});
-            res.status(200).json({success:true,message:"Successfully updated", data:updatedTour,});
-        }catch(err){
-            res.status(500).json({success:false,message:"Failed to update. Try again",})
-        }
-    },
+    // Update tour controller function
+updateTour: async (req, res) => {
+    const id = req.params.id;
+    try {
+      // If there are new photos, map their filenames
+      let newPhotos = [];
+      if (req.files && req.files.length > 0) {
+        newPhotos = req.files.map(file => `/images/tour/${file.filename}`);
+      }
+  
+      // Find the existing tour to update
+      const existingTour = await Tour.findById(id);
+      if (!existingTour) {
+        return res.status(404).json({ success: false, message: 'Tour not found' });
+      }
+  
+      // Merge existing photos with new photos
+      const updatedPhotos = [...existingTour.photos, ...newPhotos];
+  
+      // Handle destinations from client data
+      const destinations = req.body.destinations ? req.body.destinations.split(',').map(destination => destination.trim()) : [];
+      const updatedDestinations = [...existingTour.destinations, ...destinations];
+  
+      // Filter out invalid ObjectId fields (like reviews)
+      const updateData = { ...req.body, destinations: updatedDestinations, photos: updatedPhotos };
+      if (updateData.reviews && updateData.reviews.length > 0) {
+        updateData.reviews = updateData.reviews.filter(review => mongoose.Types.ObjectId.isValid(review));
+      }
+  
+      // Update the tour with new data and merged photos
+      const updatedTour = await Tour.findByIdAndUpdate(id, {
+        $set: updateData
+      }, { new: true });
+  
+      res.status(200).json({ success: true, message: 'Successfully updated', data: updatedTour });
+    } catch (err) {
+      console.error('Error updating tour:', err);  // Log the detailed error
+      res.status(500).json({ success: false, message: 'Failed to update. Try again', error: err.message });
+    }
+  },
+  
     // Soft delete tour
     softDeleteTour: async (req, res) => {
         const id = req.params.id;
@@ -41,7 +74,7 @@ const tourController = {
         }
     },
     //deleteTour
-    deleteTour:async(req, res)=>{
+    hardDeleteTour:async(req, res)=>{
         const id = req.params.id;
         try{
             await Tour.findByIdAndDelete(id);
@@ -139,8 +172,8 @@ const tourController = {
     getTourByVehicle:async(req, res)=>{
         const vehicle = new RegExp(req.query.vehicle, 'i');
         try{
-            const tours = await Tour.find({vehicle,
-            })
+            const tours = await Tour.find({ isDeleted:false,vehicle
+            }).populate("reviews");
             res.status(200).json({success:true,count:tours.length,data:tours});
         }catch(err){
             res.status(404).json({success:false,message:"not found",})

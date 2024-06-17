@@ -11,14 +11,28 @@ const tourSchema = new mongoose.Schema(
             type:String,
             required:true,
         },
-        address:{
-            type:String,
+        departureTime :{
+            type:Number,
+            required:true,
+        },
+        endTime :{
+            type:Number,
             required:true,
         },
         desc:{
             type:String,
             required:true,
          },
+        destinations:[{ 
+            type: String, 
+            required: true 
+        }],
+        convetratePlace:{
+            type: String
+        },
+        pickupLocation:{
+            type: String
+        },
         photos:[{ 
             type: String, 
             required: true 
@@ -35,10 +49,6 @@ const tourSchema = new mongoose.Schema(
              type: Number,
              required: true,
          },
-        tourTime:{
-            type:Number,
-            required:true,
-        },
         vehicle:{
             type:String,
             required:true,
