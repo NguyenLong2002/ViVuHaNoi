@@ -2,6 +2,8 @@
 import { onMounted,computed } from 'vue';
 import { useStore } from 'vuex';
 
+const backendBaseUrl = 'http://localhost:8000';
+
 const store = useStore();
 onMounted(() => {
     store.dispatch('tour/getDeletedTours');
@@ -40,7 +42,17 @@ const hardDeletedTour = async (tourId) =>{
         alert('Hủy xóa vĩnh viễn tour!');
     }
 }
+const formatPrice = (value) => {
+      return new Intl.NumberFormat('vi-VN').format(value);
+};
 
+const getTourPhotoUrl = (photos) => {
+    if (photos) {
+        return `${backendBaseUrl}${photos.split('\\').join('/')}`;
+    } else {
+        return `${backendBaseUrl}/images/tour/default.jpg`;
+    }
+};
 </script>
 
 <template>
@@ -69,6 +81,9 @@ const hardDeletedTour = async (tourId) =>{
                             </div>
                         </th>
                         <th scope="col" class="px-6 py-3">
+                            Hình ảnh
+                        </th>
+                        <th scope="col" class="px-6 py-3">
                             Tên tour
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -77,6 +92,10 @@ const hardDeletedTour = async (tourId) =>{
                         <th scope="col" class="px-6 py-3">
                             Giá cho người lớn (vnđ)
                         </th>
+                        <th scope="col" class="px-6 py-3">
+                            Thời gian trải nghiệm
+                        </th>
+                        
                         <th scope="col" class="px-6 py-3">
                             Hành động
                         </th>
@@ -90,15 +109,22 @@ const hardDeletedTour = async (tourId) =>{
                                 <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
                             </div>
                         </td>
-                        <th  class="text-start">
+                        <td class="">
+                            <img class="h-24 w-full rounded-lg py-1" :src="getTourPhotoUrl(tour.photos[0])">                   
+                        </td>
+                        <th  class="text-start pl-5">
                             {{ tour.title }}
                         </th>
-                        <td  class="text-start">
+                        <td  class="">
                             {{ tour.featured ? 'Có':'Không' }}
                         </td>
                         <td class="">
-                            {{ tour.priceForAdults }}                    
+                            {{ formatPrice(tour.priceForAdults) }} đ                   
                         </td>
+                        <td class="">
+                            {{ tour.endTime - tour.departureTime }} giờ                  
+                        </td>
+                        
                         <td class=" flex flex-col items-center py-2">
                             <button @click="restoreTour(tour._id)" class="font-semibold text-white p-2 bg-yellow-400 hover:bg-yellow-300 rounded-lg">Khôi phục</button>
                             <button @click="hardDeletedTour(tour._id)" class="font-semibold text-white p-2 bg-red-600 hover:bg-red-500  rounded-lg mt-2">Xóa vĩnh viễn</button>

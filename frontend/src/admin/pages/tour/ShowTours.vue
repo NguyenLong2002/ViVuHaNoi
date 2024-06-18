@@ -4,6 +4,7 @@ import { initDropdowns } from 'flowbite';
 import { useStore } from 'vuex';
 
 const sortOrder = ref('asc');
+const backendBaseUrl = 'http://localhost:8000';
 
 const store = useStore();
 
@@ -48,7 +49,17 @@ const softDeleteTour = async (tourId) =>{
     }
     
 };
+const formatPrice = (value) => {
+      return new Intl.NumberFormat('vi-VN').format(value);
+};
 
+const getTourPhotoUrl = (photos) => {
+    if (photos) {
+        return `${backendBaseUrl}${photos.split('\\').join('/')}`;
+    } else {
+        return `${backendBaseUrl}/images/tour/default.jpg`;
+    }
+};
 </script>
 
 <template>
@@ -88,10 +99,10 @@ const softDeleteTour = async (tourId) =>{
                             </div>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Tên tour
+                            Hình ảnh
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Thành phố
+                            Tên tour
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Phương tiện
@@ -124,26 +135,26 @@ const softDeleteTour = async (tourId) =>{
                                 <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
                             </div>
                         </td>
-                        <th  class="text-start py-2">
+                        <td class="">
+                            <img class="h-24 w-full rounded-lg py-1.5" :src="getTourPhotoUrl(tour.photos[0])">                   
+                        </td>
+                        <th  class="text-start pl-5">
                             {{ tour.title }}
                         </th>
-                        <td class="">
-                            {{ tour.city }}
-                        </td>
                         <td class="">
                             {{ tour.vehicle }}
                         </td>
                         <td class="">
-                            {{ tour.priceForAdults }}                    
+                            {{ formatPrice(tour.priceForAdults) }} đ                    
                         </td>
                         <td class="">
-                            {{ tour.priceForChildren }}
+                            {{ formatPrice(tour.priceForChildren) }} đ
                         </td>
                         <td class="">
                             {{ tour.maxGroupSize }}                    
                         </td>
                         <td class="">
-                            {{ tour.endTime - tour.departureTime }}
+                            {{ tour.endTime - tour.departureTime }} giờ
                         </td>
                         <td class="">
                             {{ tour.featured ? 'Có' : 'Không' }}

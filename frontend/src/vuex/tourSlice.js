@@ -4,6 +4,7 @@ import axios from 'axios';
 const state = {
   tours: [],
   singleTour: null,
+  toursFeatured :[],
   deletedTours: [],
   toursByVehicle:[],
 };
@@ -14,6 +15,9 @@ const mutations = {
     },
     setSingleTour(state, tour) {
       state.singleTour = tour; 
+    },
+    setToursFeatured(state, tour) {
+      state.toursFeatured = tour; 
     },
     setDeletedTours(state, tours) {
       state.deletedTours = tours;
@@ -61,7 +65,7 @@ const actions = {
         });
 
         commit('addTour', res.data.data);
-        return res.data.data; // return the new tour data for further usage if needed
+        return res.data.data; 
       } catch (error) {
         console.error('Error creating tour:', error);
         throw error; // rethrow error for handling in component
@@ -143,6 +147,15 @@ const actions = {
           console.error('Error fetching single tour:', error);
         }
       },
+    //get tours featured
+      async getToursFeatured({ commit }) {
+        try {
+          const res = await axios.get(`http://localhost:8000/api/tour/search/featuredTours`);
+          commit('setToursFeatured', res.data.data);
+        } catch (error) {
+          console.error('Error fetching single tour:', error);
+        }
+      },
       // Get tours by vehicle
     async getToursByVehicle({ commit }, vehicle) {
       try {
@@ -153,17 +166,6 @@ const actions = {
         console.error('Error fetching tours by vehicle:', error);
         }
       },
-    //get featured tours
-    async getFeaturedTours({commit}){
-      try{
-        const res = await axios.get('http://localhost:8000/api/tour/search/featuredTours');
-        commit('setTours',res.data.data);
-      }catch(error){
-        console.error('Error fetching featured tours:', error)
-      }
-    }
-
-
 };
 
 const getters = {
@@ -171,6 +173,7 @@ const getters = {
   getSingleTour: state => state.singleTour,
   getDeletedTours: state => state.deletedTours,
   getToursByVehicle: state => state.tourByVehicle,
+  getToursFeatured: state => state.toursFeatured,
 };
 
 export default {

@@ -13,6 +13,17 @@ const children = ref(0);
 const priceForAdults = ref(0);
 const priceForChildren = ref(0);
 
+const rating = ref(0);
+const hoverRating = ref(0);
+const stars = [1,2,3,4,5];
+
+const review = ref({
+  username: '',
+  email: '',
+  phone: '',
+  reviewText: '',
+});
+
 onMounted(async () => {
     if (id) {
         try {
@@ -25,10 +36,36 @@ onMounted(async () => {
     }
 });
 
-const tour = computed(() => {
-  return store.state.tour.singleTour;
-});
+const tour = computed(() => store.state.tour.singleTour);
 
+//Tính phần trăm cho mức sao bất kỳ
+const calculateStarPercentage = (star) => {
+    const reviews = tour.value.reviews;
+    if(!tour.value || !reviews || reviews.length === 0) return 0;
+    const totalReviews = reviews.length;
+    const starReviews = reviews.filter(review => review.rating === star).length;
+    return Math.round((starReviews / totalReviews) * 100);
+};
+
+
+// Tạo đánh giá
+const createReview = async () => {
+  try {
+    await store.dispatch('review/createReview', {TourId: id, reviewData: {...review.value, rating:rating.value}});
+    alert('Đánh giá thành công!');
+     // Reset các trường nhập liệu sau khi gửi thành công nếu cần
+    review.value.username = '';
+    review.value.phone = '';
+    review.value.email = '';
+    review.value.reviewText = '';
+    rating.value = 0;
+    hoverRating.value = 0;
+    window.location.reload();
+  } catch (error) {
+    console.error('Error creating tour:', error);
+    alert('Đánh giá thất bại!');
+  }
+};
 
 const getTourPhotoUrl = (photos) => {
     if (photos) {
@@ -102,6 +139,14 @@ const formatHour = (input) =>{
 
     return `${formattedHour}:${formattedMinute}`;
 }
+
+//Đánh giá sao
+const setRating = (newRating) => {
+  rating.value = newRating;
+}
+const setHoverRating = (newRating) => {
+  hoverRating.value = newRating;
+}
 </script>
 
 
@@ -160,7 +205,7 @@ const formatHour = (input) =>{
                 <!-- Gói dịch vụ -->
                 <div id="service" class="pt-20">
                     <h1 class="text-3xl font-bold">Gói dịch vụ</h1>
-                    <div class="w-full bg-gray-200 p-5 rounded-xl mt-6">
+                    <div class="w-full bg-gray-300 p-5 rounded-xl mt-6">
                         <div class="">
                             <div class="flex justify-between items-center">
                                 <p class="text-xl font-semibold text-gray-800">Thông tin gói dịch vụ</p>
@@ -245,58 +290,125 @@ const formatHour = (input) =>{
                         </div>
                     </div>
                 </div>
+               
                 <!-- Đánh giá -->
                 <div id="evaluate" class=" pt-20">
+                    <!--Các đánh giá-->
+                    <div class="">
+                        
+                    </div>
+                    <!--Form đánh giá-->
                     <div>
-                        <h3 class="text-3xl font-bold">Đánh giá</h3>
-                        <div class="mt-4">
-                            <div class="flex items-center">
-                                <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                                </svg>
-                                <p class="ms-2 text-sm font-bold text-gray-900 dark:text-white">{{ getAverageRating(tour.reviews) }}</p>
-                                <span class="w-1 h-1 mx-1.5 bg-gray-500 rounded-full dark:bg-gray-400"></span>
-                                <a href="#" class="text-sm font-medium text-gray-900 hover:text-primary dark:text-white">{{ tour.reviews.length }} reviews</a>
+                        <h3 class="text-3xl font-bold">Đánh giá ({{ tour.reviews.length }})</h3>
+                        <div class="mt-16">
+                            <div class="flex w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl px-2 py-4">
+                                <div class="w-1/3 text-center my-auto">
+                                    <p class="text-yellow-300 text-5xl font-bold flex items-center justify-center">{{ getAverageRating(tour.reviews) }} <font-awesome-icon :icon="['fas', 'star']" class="text-3xl ml-2"/></p>
+                                     
+                                </div>
+                                <span class="h-28 w-[1px] bg-gray-400 block my-auto mr-12"></span>
+                                <div class="w-2/3">
+                                    <div class="flex items-center ">
+                                        <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">5 sao</a>
+                                        <div class="w-3/4 h-3 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+                                            <div class="h-3 bg-yellow-300 rounded" :style="{ width: `${calculateStarPercentage(5)}%` }" ></div>
+                                        </div>
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                            {{ calculateStarPercentage(5) }} %
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center mt-3">
+                                        <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">4 sao</a>
+                                        <div class="w-3/4 h-3 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+                                            <div class="h-3 bg-yellow-300 rounded" :style="{ width: `${calculateStarPercentage(4)}%` }"></div>
+                                        </div>
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                            {{ calculateStarPercentage(4) }} %
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center mt-3">
+                                        <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">3 sao</a>
+                                        <div class="w-3/4 h-3 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+                                            <div class="h-3 bg-yellow-300 rounded" :style="{ width: `${calculateStarPercentage(3)}%` }"></div>
+                                        </div>
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                            {{ calculateStarPercentage(3) }} %
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center mt-3">
+                                        <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">2 sao</a>
+                                        <div class="w-3/4 h-3 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+                                            <div class="h-3 bg-yellow-300 rounded" :style="{ width: `${calculateStarPercentage(2)}%` }"></div>
+                                        </div>
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                            {{ calculateStarPercentage(2) }} %
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center mt-3">
+                                        <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">1 sao</a>
+                                        <div class="w-3/4 h-3 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+                                            <div class="h-3 bg-yellow-300 rounded" :style="{ width: `${calculateStarPercentage(1)}%` }"></div>
+                                        </div>
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                            {{ calculateStarPercentage(1) }} %
+                                        </span>
+                                    </div>   
+                                </div>
                             </div>
 
-                            <div class="">
-                            <form class="">
-                            <div class="mb-5 flex justify-between">
-                                <div class="w-1/2 mx-2">
-                                    <label for="" class="block ml-6 text-sm font-medium text-gray-900 dark:text-white">Chất lượng</label>
-                                    <input type="" id="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required />
-                                </div>
-                                <div class="w-1/2 mx-2">
-                                    <label for="" class="block ml-6 text-sm font-medium text-gray-900 dark:text-white">Họ và tên</label>
-                                    <input type="text" id="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nhập họ và tên" required />
-                                </div>
-                            </div>
-                            <div class="mb-5 flex justify-between">
-                                <div class="w-1/2 mx-2">
-                                    <label for="" class="block ml-6 text-sm font-medium text-gray-900 dark:text-white">Số điện thoại</label>
-                                    <input type="text" id="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nhập số điện thoại" required />
-                                </div>
-                                <div class="w-1/2 mx-2">
-                                    <label for="" class="block ml-6 text-sm font-medium text-gray-900 dark:text-white">Địa chỉ email</label>
-                                    <input type="email" id="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nhập email" required />
-                                </div>
-                            </div>
-                            <div class="mx-2">
-                                    <label for="" class="block ml-6 text-sm font-medium text-gray-900 dark:text-white">Nhận xét của bạn</label>
-                                    <textarea type="text" id="" rows="5" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nhận xét của bạn" required ></textarea>
-                            </div>
-                            <div class="flex justify-end ">
-                            <button type = "submit" class="md:mr-4 mt-5 px-8 py-2 text-lg font-medium text-center text-secondary bg-primary rounded-xl shadow-3xl hover:text-white hover:bg-secondary transition-colors duration-300 ease-in-out ">Gửi</button>
-                            </div>
-                            </form>
-
+                            <div class="mt-12">
+                                <form @submit.prevent="createReview" class="">
+                                    <div class="mb-5 flex justify-between">
+                                        <div class="w-1/2 mx-2">
+                                            <label for="rating" class="block ml-6 text-sm font-medium text-gray-900 dark:text-white">Chất lượng</label>
+                                            <div class="flex items-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full w-full px-2 py-2">
+                                                <svg
+                                                    v-for="(star, index) in stars"
+                                                    :key="index"
+                                                    class="w-7 h-7 ms-3 cursor-pointer transition duration-200 ease-in-out transform"
+                                                    :class="{'text-yellow-300': index < hoverRating || index < rating, 'text-gray-300': index >= hoverRating && index >= rating}"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 22 20"
+                                                    @mouseover="setHoverRating(index + 1)"
+                                                    @mouseleave="setHoverRating(0)"
+                                                    @click="setRating(index + 1)"
+                                                    >
+                                                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div class="w-1/2 mx-2">
+                                            <label for="username" class="block ml-6 text-sm font-medium text-gray-900 dark:text-white">Họ và tên</label>
+                                            <input v-model = "review.username" type="text" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nhập họ và tên" required />
+                                        </div>
+                                    </div>
+                                    <div class="mb-5 flex justify-between">
+                                        <div class="w-1/2 mx-2">
+                                            <label for="phone" class="block ml-6 text-sm font-medium text-gray-900 dark:text-white">Số điện thoại</label>
+                                            <input v-model = "review.phone" type="text" id="phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nhập số điện thoại" required />
+                                        </div>
+                                        <div class="w-1/2 mx-2">
+                                            <label for="email" class="block ml-6 text-sm font-medium text-gray-900 dark:text-white">Địa chỉ email</label>
+                                            <input v-model = "review.email" type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nhập email" required />
+                                        </div>
+                                    </div>
+                                    <div class="mx-2">
+                                            <label for="reviewText" class="block ml-6 text-sm font-medium text-gray-900 dark:text-white">Nhận xét của bạn</label>
+                                            <textarea v-model = "review.reviewText"  type="text" id="reviewText" rows="5" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nhận xét của bạn" required ></textarea>
+                                    </div>
+                                    <div class="flex justify-end ">
+                                        <button type = "submit" class="md:mr-4 mt-5 px-8 py-2 text-lg font-medium text-center text-secondary bg-primary rounded-xl shadow-3xl hover:text-white hover:bg-secondary transition-colors duration-300 ease-in-out ">Gửi
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="w-1/3 ml-4">
-                <div class="relative bg-gray-200 p-5 rounded-xl mt-36">
+                <div class="relative bg-gray-300 p-5 rounded-xl mt-36">
                     <div class="absolute top-5 -left-7 w-0 h-0 border-l-[15px] border-r-[15px] border-b-[15px] border-t-[15px] border-transparent border-r-gray-200"></div>
                     <div class="text-xl font-semibold text-gray-800">Chi tiết gói dịch vụ</div>
                     <div class="">
@@ -319,7 +431,7 @@ const formatHour = (input) =>{
                             <h4 class="text-gray-800 font-semibold ml-2 mt-2">Thời gian được xác định sau khi đặt</h4>
                             <p class="mx-4"><span class="text-gray-900 font-medium">- Đưa đón miễn phí tại :</span> {{ tour.pickupLocation }}</p>
                             <p class="mx-4">- Vui lòng có mặt trước tại điểm tập trung nếu bạn nằm ngoài khu vực đón khách. Thời gian khởi hành lúc {{ formatHour(tour.departureTime) }}. Hãy đến đúng giờ đặt nhé!</p>
-                            <h4 class="text-gray-800 font-semibold ml-2 mt-2">Văn phòng điều hành.</h4>
+                            <h4 class="text-gray-800 font-semibold ml-2 mt-2">Điểm tập trung.</h4>
                             <p class="mx-4"><span class="text-gray-900 font-medium">- Địa chỉ:</span> {{ tour.convetratePlace }}</p>
                         </div>
                     </div>
@@ -330,10 +442,6 @@ const formatHour = (input) =>{
     </div>
 </template>
 
-<style scoped>
-.active {
-  background-color: 
-}
-</style>
+
 
 

@@ -1,7 +1,7 @@
 
 <template>
     <div class="grid grid-cols-3 gap-8">
-      <TourCard v-for="tour in tours" :key="tour._id" :tour="tour" />
+      <TourCard v-for="tour in toursFeatured" :key="tour._id" :tour="tour" />
     </div>
 </template>
 
@@ -13,10 +13,10 @@ import { useStore } from 'vuex';
 const store = useStore();
 
 onMounted(() => {
-  store.dispatch('tour/getTours');
+  store.dispatch('tour/getToursFeatured');
 });
 
-const tours = computed(() => store.state.tour.tours);
+const toursFeatured = computed(() => store.state.tour.toursFeatured);
 
 
 </script>

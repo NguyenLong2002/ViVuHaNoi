@@ -16,7 +16,7 @@ const actions = {
   async getUsers({ commit }) {
     try {
       const res = await axios.get('http://localhost:8000/api/user');
-      commit('setUsers', res.data); // Chắc chắn rằng `res.data` là mảng người dùng
+      commit('setUsers', res.data); 
     } catch (error) {
       console.error('Error fetching users:', error);
     }

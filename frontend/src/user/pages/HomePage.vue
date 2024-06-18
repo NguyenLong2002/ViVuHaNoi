@@ -70,7 +70,8 @@
   <div class="tours mt-24 w-3/4 mx-auto mb-30">
     <div class="text-center">
       <h1 class="font-extrabold text-3xl text-gray-900">Các tour Hà Nội hấp dẫn nhất</h1>
-      <p class="text-lg font-medium opacity-90 mt-2">Một cái gì đó ở đây</p>
+      <p class="text-lg font-semibold text-gray-800 mt-2">Hấp Dẫn - Thú Vị - Độc Đáo</p>
+      <span class="w-28 h-[2px] block bg-primary mt-4 mx-auto"></span>
     </div>
     <div class="mt-20">
       <TourListCard />
