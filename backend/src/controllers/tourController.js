@@ -41,7 +41,7 @@ updateTour: async (req, res) => {
   
       // Handle destinations from client data
       const destinations = req.body.destinations ? req.body.destinations.split(',').map(destination => destination.trim()) : [];
-      const updatedDestinations = [...existingTour.destinations, ...destinations];
+      const updatedDestinations = destinations;
   
       // Filter out invalid ObjectId fields (like reviews)
       const updateData = { ...req.body, destinations: updatedDestinations, photos: updatedPhotos };
@@ -114,13 +114,13 @@ updateTour: async (req, res) => {
             res.status(404).json({success:false,message:"Not found",})
         }
     },
-    //getAllTour
+    //getAllTour skip(page * 6).limit(6)
     getAllTour:async(req, res)=>{
 
         //for pagination
         const page = parseInt(req.query.page);
         try{
-            const tours = await Tour.find({isDeleted:false}).populate("reviews").skip(page * 6).limit(6);
+            const tours = await Tour.find({isDeleted:false}).populate("reviews");
             res.status(200).json({success:true,message:"Successful ",count:tours.length, data:tours});
         }catch(err){
             res.status(404).json({success:false,message:"Not found",})

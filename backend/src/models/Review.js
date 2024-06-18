@@ -5,9 +5,18 @@ const reviewSchema = new mongoose.Schema(
     TourId: {
       type: mongoose.Types.ObjectId,
       ref: "Tour",
+      required:true,
     },
     username: {
       type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: Number,
       required: true,
     },
     reviewText: {
