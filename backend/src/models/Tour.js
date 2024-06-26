@@ -11,11 +11,7 @@ const tourSchema = new mongoose.Schema(
             type:String,
             required:true,
         },
-        departureTime :{
-            type:Number,
-            required:true,
-        },
-        endTime :{
+        tourTime :{
             type:Number,
             required:true,
         },
@@ -27,7 +23,7 @@ const tourSchema = new mongoose.Schema(
             type: String, 
             required: true 
         }],
-        convetratePlace:{
+        executiveOffice:{
             type: String
         },
         pickupLocation:{

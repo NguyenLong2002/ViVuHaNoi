@@ -1,6 +1,5 @@
 // store/reviewSlice.js
 import axios from 'axios';
-
 const state = {
   reviews: [],
 };
@@ -19,9 +18,8 @@ const actions = {
     // create review
     async createReview({ commit }, {TourId, reviewData} ) {
         try {
-          const res = await axios.post(`http://localhost:8000/api/review/${TourId}`,reviewData);
+          const res = await axios.post(`http://localhost:8000/api/review/${TourId}`,{ ...reviewData});
           commit('createTour', res.data.data);
-
           return res.data.data; 
         } catch (error) {
           console.error('Error creating tour:', error);

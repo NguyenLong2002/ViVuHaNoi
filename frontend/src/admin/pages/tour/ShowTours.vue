@@ -154,7 +154,7 @@ const getTourPhotoUrl = (photos) => {
                             {{ tour.maxGroupSize }}                    
                         </td>
                         <td class="">
-                            {{ tour.endTime - tour.departureTime }} giờ
+                            {{ tour.tourTime }} giờ
                         </td>
                         <td class="">
                             {{ tour.featured ? 'Có' : 'Không' }}

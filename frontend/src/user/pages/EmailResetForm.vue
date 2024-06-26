@@ -23,7 +23,7 @@
 
 <script>
 import { ref } from 'vue';
-import { useRoute,useRouter  } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 
 export default {
@@ -46,9 +46,12 @@ export default {
         if (response.status === 200) {
           router.push('/');
         }
-
       } catch (error) {
-        message.value = 'Lỗi! Hãy thử lại.';
+        if (error.response) {
+          message.value = error.response.data.message;
+        } else {
+          message.value = 'Lỗi! Hãy thử lại.';
+        }
       }
     };
 
@@ -60,6 +63,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .modal-overlay {

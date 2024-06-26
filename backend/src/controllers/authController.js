@@ -141,7 +141,7 @@ const authController = {
     },
 
     //yêu cầu đặt lại mật khẩu
-    requestPasswordReset: async(req, res) =>{
+    requestPasswordReset: async (req, res) => {
         try {
             const user = await User.findOne({ email: req.body.email });
             if (!user) {
@@ -152,7 +152,7 @@ const authController = {
             const hash = await bcrypt.hash(resetToken, 10);
 
             user.resetPasswordToken = hash;
-            user.resetPasswordExpire = Date.now() + 3600000; // Token valid for 30 minutes
+            user.resetPasswordExpire = Date.now() + 3600000; // Token valid for 1 hour
             await user.save();
 
             // Send email
@@ -171,9 +171,10 @@ const authController = {
         }
     },
     // Đặt lại mật khẩu
-     resetPassword: async (req, res) => {
+    resetPassword: async (req, res) => {
         try {
             const resetToken = req.params.token;
+
             const user = await User.findOne({
                 resetPasswordExpire: { $gt: Date.now() },
             });
@@ -195,7 +196,6 @@ const authController = {
             res.status(200).json({ message: 'Password reset successful' });
             
         } catch (err) {
-            console.error('Password reset error:', err);
             res.status(500).json({ message: 'Internal server error' });
         }
     },

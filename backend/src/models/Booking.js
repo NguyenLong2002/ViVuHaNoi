@@ -2,35 +2,42 @@ const mongoose = require("mongoose");
 
 const bookingSchema = new mongoose.Schema(
   {
-    userId: {
-      type: String,
+    tourDetails: {
+      type: mongoose.Types.ObjectId,
+      ref: "Tour",
+      required: true,
     },
-    userEmail: {
-      type: String,
-    },
-    fullName: {
+    firstName: {
       type: String,
       required: true,
     },
-    tourName:{
-        type: String,
+    lastName: {
+      type: String,
       required: true,
     },
-    adultSize: {
-      type: Number,
-      required: true,
-    },
-    childrenSize: {
-      type: Number,
+    email: {
+      type: String,
       required: true,
     },
     phone:{
         type:Number,
         required: true,
     },
-    lookAt:{
-        type:Date,
-    }
+    hotelAddress:{
+      type: String,
+      required:true,
+    },
+    timeStart:{
+      type:Number,
+      required:true,
+    },
+    userRequest:{
+      type:String,
+    },
+    status: {
+      type: String,
+      default: "Booked",
+    },
   },
   { timestamps: true }
 );

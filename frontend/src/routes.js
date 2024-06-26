@@ -1,10 +1,10 @@
 import HomePage from './user/pages/HomePage.vue';
 import ToursPage from './user/pages/ToursPage.vue';
 import TourDetail from './user/pages/TourDetail.vue';
-import BlogPage from './user/pages/BlogPage.vue';
 import ContactPage from './user/pages/ContactPage.vue';
 import EmailResetForm from './user/pages/EmailResetForm.vue';
 import AdminDashboard from './admin/pages/AdminDashboard.vue';
+import BookingPage from './user/pages/BookingPage.vue';
 import AdminApp from './admin/AdminApp.vue';
 import UserApp from './user/UserApp.vue';
 
@@ -16,7 +16,6 @@ import TrashTour from './admin/pages/tour/TrashTour.vue';
 
 import UserRouter from './admin/pages/user/UserRouter.vue';
 import ShowUsers from './admin/pages/user/ShowUsers.vue';
-import BlogAdmin from './admin/pages/blog/ShowBlogs.vue';
 import { checkAdmin } from './utils/utility';
 
 export const routes = [
@@ -80,10 +79,6 @@ export const routes = [
           // }
         ]
       },
-      {
-        path: 'blogs',
-        component: BlogAdmin
-      },
       
     ]
   },
@@ -94,8 +89,8 @@ export const routes = [
       { path: '', component: HomePage },
       { path: 'tours', component: ToursPage },
       { path: 'tours/tour-detail/:id', component: TourDetail, props: true },
-      { path: 'blogs', component: BlogPage },
       { path: 'contact', component: ContactPage },
+      { path: 'tour-booking/:id', component: BookingPage },
       { path: 'reset-password/:token', component: EmailResetForm, props: true },
     ]
   },

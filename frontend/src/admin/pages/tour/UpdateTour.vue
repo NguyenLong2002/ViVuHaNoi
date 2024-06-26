@@ -139,10 +139,6 @@ const updateTour = async () => {
             <input v-model="tour.destinations" type="text" id="destinations" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
           </div>
           <div class="mb-5">
-            <label for="convetratePlace" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Điểm tập trung</label>
-            <input v-model="tour.convetratePlace" type="text" id="convetratePlace" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  />
-          </div>
-          <div class="mb-5">
             <label for="pickupLocation" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Điểm đón khách</label>
             <input v-model="tour.pickupLocation" type="text" id="pickupLocation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  />
           </div>
@@ -174,16 +170,16 @@ const updateTour = async () => {
             <input v-model="formattedPriceForChildren" @input="formatPrice('children')" type="text" id="priceForChildren" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
           </div>
           <div class="mb-5">
-            <label for="departureTime" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giờ khởi hành</label>
-            <input v-model="tour.departureTime" @change="checkTime('departureTime')" type="text" id="departureTime" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
-          </div>
-          <div class="mb-5">
-            <label for="endTime" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giờ kết thúc</label>
-            <input v-model="tour.endTime" @change="checkTime('endTime')" type="text" id="endTime" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+            <label for="tourTime" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thời lượng trải nghiệm</label>
+            <input v-model="tour.tourTime" @change="checkTime('tourTime')" type="text" id="tourTime" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
           </div>
           <div class="mb-5">
             <label for="maxGroupSize" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số lượng người tham gia tối đa (1 - 100)</label>
             <input v-model="tour.maxGroupSize" @change="checkMaxGroupSize" type="number" id="maxGroupSize" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+          </div>
+          <div class="mb-5">
+            <label for="executiveOffice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Văn phòng điều hành</label>
+            <input v-model="tour.executiveOffice" type="text" id="executiveOffice" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  />
           </div>
           <div class="mb-5">
             <label for="multiple_photos" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hình ảnh tour</label>

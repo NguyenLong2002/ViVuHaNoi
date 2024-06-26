@@ -54,9 +54,6 @@
             <router-link to="/tours" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary md:p-0">Du lịch</router-link>
           </li>
           <li>
-            <router-link to="/blogs" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary md:p-0">Blog</router-link>
-          </li>
-          <li>
             <router-link to="/contact" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary md:p-0">Liên hệ</router-link>
           </li>
         </ul>

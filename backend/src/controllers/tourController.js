@@ -1,4 +1,6 @@
+const mongoose = require("mongoose");
 const Tour = require("../models/Tour");
+const Review = require("../models/Review");
 
 const tourController = {
     //createTour
@@ -21,45 +23,52 @@ const tourController = {
         }
     },
     // Update tour controller function
-updateTour: async (req, res) => {
-    const id = req.params.id;
-    try {
-      // If there are new photos, map their filenames
-      let newPhotos = [];
-      if (req.files && req.files.length > 0) {
-        newPhotos = req.files.map(file => `/images/tour/${file.filename}`);
-      }
-  
-      // Find the existing tour to update
-      const existingTour = await Tour.findById(id);
-      if (!existingTour) {
-        return res.status(404).json({ success: false, message: 'Tour not found' });
-      }
-  
-      // Merge existing photos with new photos
-      const updatedPhotos = [...existingTour.photos, ...newPhotos];
-  
-      // Handle destinations from client data
-      const destinations = req.body.destinations ? req.body.destinations.split(',').map(destination => destination.trim()) : [];
-      const updatedDestinations = destinations;
-  
-      // Filter out invalid ObjectId fields (like reviews)
-      const updateData = { ...req.body, destinations: updatedDestinations, photos: updatedPhotos };
-      if (updateData.reviews && updateData.reviews.length > 0) {
-        updateData.reviews = updateData.reviews.filter(review => mongoose.Types.ObjectId.isValid(review));
-      }
-  
-      // Update the tour with new data and merged photos
-      const updatedTour = await Tour.findByIdAndUpdate(id, {
-        $set: updateData
-      }, { new: true });
-  
-      res.status(200).json({ success: true, message: 'Successfully updated', data: updatedTour });
-    } catch (err) {
-      console.error('Error updating tour:', err);  // Log the detailed error
-      res.status(500).json({ success: false, message: 'Failed to update. Try again', error: err.message });
-    }
-  },
+     updateTour: async (req, res) => {
+        const id = req.params.id;
+        try {
+          // If there are new photos, map their filenames
+          let newPhotos = [];
+          if (req.files && req.files.length > 0) {
+            newPhotos = req.files.map(file => `/images/tour/${file.filename}`);
+          }
+      
+          // Find the existing tour to update
+          const existingTour = await Tour.findById(id);
+          if (!existingTour) {
+            return res.status(404).json({ success: false, message: 'Tour not found' });
+          }
+      
+          // Merge existing photos with new photos
+          const updatedPhotos = [...existingTour.photos, ...newPhotos];
+      
+          // Handle destinations from client data
+          const destinations = req.body.destinations ? req.body.destinations.split(',').map(destination => destination.trim()) : [];
+          const updatedDestinations = destinations;
+      
+          // Ensure reviews is an array
+          let reviews = req.body.reviews;
+          if (reviews && !Array.isArray(reviews)) {
+            reviews = [reviews]; // Ensure reviews is an array if it is not
+          }
+          if (reviews) {
+            reviews = reviews.filter(review => mongoose.Types.ObjectId.isValid(review));
+          }
+      
+          // Filter out invalid ObjectId fields (like reviews)
+          const updateData = { ...req.body, destinations: updatedDestinations, photos: updatedPhotos, reviews };
+      
+          // Update the tour with new data and merged photos
+          const updatedTour = await Tour.findByIdAndUpdate(id, {
+            $set: updateData
+          }, { new: true });
+      
+          res.status(200).json({ success: true, message: 'Successfully updated', data: updatedTour });
+        } catch (err) {
+          console.error('Error updating tour:', err);  // Log the detailed error
+          res.status(500).json({ success: false, message: 'Failed to update. Try again', error: err.message });
+        }
+      },
+      
   
     // Soft delete tour
     softDeleteTour: async (req, res) => {
